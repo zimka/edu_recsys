@@ -1,0 +1,23 @@
+{
+  "ALLOWED_HOSTS": [
+    "0.0.0.0"
+  ],
+  "API_KEY": "API_KEY",
+  "BROKER_URL": "amqp://{user}:{password}@{host}:{port}/{vhost}",
+  "DATABASE": {
+    "ENGINE": "django.db.backends.mysql",
+    "NAME": "{db_name}",
+    "USER": "{user}",
+    "PASSWORD": "{password}",
+    "HOST": "localhost",
+    "PORT": "3306",
+    "OPTIONS": {
+      "connect_timeout": 2
+    },
+    "TEST": {
+      "CHARSET": "UTF8"
+    }
+  },
+  "DEBUG": false,
+  "SECRET_KEY": "some_secret_string"
+}
