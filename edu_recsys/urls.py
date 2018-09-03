@@ -7,7 +7,7 @@ from rest_framework.documentation import include_docs_urls
 apiurlpatterns = [
     path('activity/', include("apps.activity.urls")),
     path('docs/', include_docs_urls(title='API Documentaion')),
-
+    path('dp/', include('apps.digital_profile.urls'))
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -106,7 +106,7 @@ DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S"
 
 STATIC_URL = '/static/'
 INSTALLED_APPS += ("rest_framework", "coreapi")
-INSTALLED_APPS += ("apps.context", "apps.core", "apps.activity")
+INSTALLED_APPS += ("apps.context", "apps.core", "apps.activity", "apps.digital_profile")
 
 CONFIG = json.loads(open(os.path.join(BASE_DIR, 'config.json')).read())
 
