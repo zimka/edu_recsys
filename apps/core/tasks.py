@@ -1,9 +1,9 @@
 import logging
-
-from celery.task import task
+from celery import shared_task
 
 log = logging.getLogger(__name__)
 
-@task
+
+@shared_task
 def update_activity_recommendations(manager, **kwargs):
     return manager.do_update(**kwargs)

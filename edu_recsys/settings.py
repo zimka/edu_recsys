@@ -104,9 +104,10 @@ REST_FRAMEWORK = {
 }
 DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S"
 
+STATIC_ROOT = '/var/www/edu_recsys/static/'
 STATIC_URL = '/static/'
 INSTALLED_APPS += ("rest_framework", "coreapi")
-INSTALLED_APPS += ("apps.context", "apps.core", "apps.activity")
+INSTALLED_APPS += ("apps.context", "apps.core", "apps.activity", "apps.digital_profile")
 
 CONFIG = json.loads(open(os.path.join(BASE_DIR, 'config.json')).read())
 
@@ -124,12 +125,8 @@ DATABASES = {
 
 BROKER_URL = CONFIG["BROKER_URL"]
 
-# hack - sql3 for local tests
-if 'test' in sys.argv:
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+CELERY_TASK_SERIALIZER = "pickle"
+CELERY_ACCEPT_CONTENT = ['pickle']
 
 if DEBUG:
     MIDDLEWARE += (
@@ -149,3 +146,10 @@ if DEBUG:
     )
 
     INSTALLED_APPS += ("debug_toolbar",)
+
+    # hack - sql3 for local tests
+    if 'test' in sys.argv:
+        DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
