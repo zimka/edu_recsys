@@ -1,4 +1,5 @@
 python-virtualenv
 libmysqlclient-dev
-build-essential?
+build-essential
 python3-dev
+rabbitmq-server
