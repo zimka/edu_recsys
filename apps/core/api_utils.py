@@ -28,10 +28,12 @@ class ApiKeyPermission(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        return True
         api_key = getattr(settings, 'API_KEY', None)
         if not api_key:
             logging.error('API_KEY not configured')
+        if api_key is False:
+            return True
+
         key = request.META.get('HTTP_X_API_KEY')
         if key and api_key and key == api_key:
             return True

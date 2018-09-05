@@ -1,10 +1,20 @@
+from abc import ABCMeta, abstractmethod, abstractclassmethod
 import uuid
 
 from django.db import models
 from model_utils.models import SoftDeletableModel
 
 
-class Activity(SoftDeletableModel):
+class LoadableDumb:
+    def load(self):
+        pass
+
+    @classmethod
+    def load_bulk(cls):
+        pass
+
+
+class Activity(SoftDeletableModel, LoadableDumb):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     title = models.TextField()
     #TODO: ForeignKey IsleContext
@@ -13,16 +23,19 @@ class Activity(SoftDeletableModel):
         return self.title
 
 
-class Student(SoftDeletableModel):
+class Student(SoftDeletableModel, LoadableDumb):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     leader_id = models.IntegerField(unique=True, null=True)
-    is_complete = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.leader_id)
 
+    @property
+    def is_complete(self):
+        return self.digital_profile is not None
 
-class IsleContext(SoftDeletableModel):
+
+class IsleContext(SoftDeletableModel, LoadableDumb):
     name = models.CharField(max_length=255)
 
     @classmethod

@@ -27,6 +27,17 @@ class ActivityRecommenderManagerTestCase(BaseActRecTestCase):
         recs = ActivityRecommendationLogs.objects.all()
         self.assertTrue(len(recs) == self.N_USERS * self.N_ACTS)
 
+    def test_manager_single_update(self):
+        lvl = 0.5
+        man = ActivityRecommendationManager(forced_config=get_test_config(lvl))
+        u = Student.objects.first()
+        self.assertFalse(len(ActivityRecommendationLogs.objects.all()))
+        man.do_single_update(u)
+        self.assertTrue(len(ActivityRecommendationLogs.objects.all())==self.N_ACTS)
+        generated_users = set(x.user for x in ActivityRecommendationLogs.objects.all())
+        self.assertTrue(len(generated_users) == 1)
+        self.assertTrue(list(generated_users)[0] == u)
+
 
 class ActivityRecommendationTestCase(BaseActRecTestCase):
     def setUp(self):

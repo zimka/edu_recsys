@@ -22,6 +22,17 @@ class ActivityRecommendationManager(AbstractRecommendationManager):
             for meth in pipeline:
                 recommendations = meth(recommendations)
 
+    def do_single_update(self, user, item_filter=lambda x: True):
+        config = self.forced_config or self.get_groups_config()
+
+        pipeline = list(getattr(self, name) for name in ["_filter_recommendations", "_to_logs", "_to_fresh"])
+        for recommender, users in config.items():
+            if user not in users:
+                continue
+            recommendations = recommender.get_recommendations(users=[user], item_filter=item_filter)
+            for meth in pipeline:
+                recommendations = meth(recommendations)
+
     def get_groups_config(self):
         return {
             ConstRecommender(): Student.objects.all()

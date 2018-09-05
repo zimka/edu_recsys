@@ -1,8 +1,10 @@
 from django.urls import path
-from .api import UserDiagnosticsResultView
+from .api import UserDiagnosticsResultView, DigitalProfileView
 
 app_name = 'digital_profile'
 
 urlpatterns = [
-    path('<uuid:user_uuid>/', UserDiagnosticsResultView.as_view()),
+    path('diagnostics/<uuid:user_uuid>', UserDiagnosticsResultView.as_view()),
+    path('profile/<uuid:user_uuid>', DigitalProfileView.as_view()),
+
 ]
