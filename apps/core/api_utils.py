@@ -16,10 +16,10 @@ class RecommendationSerializer(serializers.Serializer):
     created = serializers.DateTimeField(format=settings.DATETIME_FORMAT)
 
     def get_user(self, obj):
-        return str(obj.user.uuid)
+        return str(obj.user.get_uid())
 
     def get_item(self, obj):
-        return str(obj.item.uuid)
+        return str(obj.item.get_uid())
 
 
 class ApiKeyPermission(permissions.BasePermission):

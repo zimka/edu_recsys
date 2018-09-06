@@ -17,14 +17,26 @@
 
   ::
 
-     pip install -r requirements.txt
+    pip install -r requirements.txt
 
-3. Запуск миграций
+3. Настройка базы и редактирование config.json на основе config.json.example. База должна быть с кодировкой UTF8
 
   ::
 
-    django-admin migrate
+    CREATE DATABASE IF NOT EXISTS %s CHAR SET 'UTF8'
 
-4. Установка периодического systemd/cron запуска management команды activity_recommendations_update
 
-5. Создание файла edu_recsys/config.json на основе edu_recsys/config.json.example и его модификация
+
+4. Запуск миграций
+
+  ::
+
+    python manage.py migrate
+
+5. Установка периодического systemd/cron запуска management команд update_activity_recommendations, load_activities
+
+6. Подгрузка дефолтных данных в базу
+
+  ::
+
+    python manage.py loaddata context

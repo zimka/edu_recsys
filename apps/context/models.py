@@ -1,8 +1,17 @@
-from abc import ABCMeta, abstractmethod, abstractclassmethod
 import uuid
 
 from django.db import models
 from model_utils.models import SoftDeletableModel
+
+
+class Directions:
+
+    DATA_ANALYST = "Дата-аналитик"
+    BUSINESS_ARCHITECT = "Бизнес-архитектор"
+    ORGANIZER = "Организатор"
+    ENTREPRENEUR = "Предприниматель"
+    COMMUNITY_LEADER = "Лидер сообществ"
+    TECHNOLOGIST = "Технолог"
 
 
 class LoadableDumb:
@@ -16,19 +25,38 @@ class LoadableDumb:
 
 class Activity(SoftDeletableModel, LoadableDumb):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    title = models.TextField()
+    title = models.CharField(max_length=255)
     #TODO: ForeignKey IsleContext
 
     def __str__(self):
         return self.title
 
+    def get_uid(self):
+        return self.uuid
+
 
 class Student(SoftDeletableModel, LoadableDumb):
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    uid = models.IntegerField(editable=False, unique=True)
     leader_id = models.IntegerField(unique=True, null=True)
 
     def __str__(self):
-        return str(self.leader_id)
+        return str(self.uid)
+
+    @classmethod
+    def get(cls, uid, create=False):
+        if not isinstance(uid, int):
+            return None
+        try:
+            if create:
+                student, created = cls.objects.get_or_create(uid=uid)
+                return student
+            else:
+                return cls.objects.get(uid=uid)
+        except cls.DoesNotExist:
+            return None
+
+    def get_uid(self):
+        return self.uid
 
     @property
     def is_complete(self):

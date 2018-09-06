@@ -36,13 +36,13 @@ class ActivityRecommendationManager(AbstractRecommendationManager):
             ConstRecommender(): Student.objects.all()
         }
 
-    def get_recommendations(self, created_after=None, user_uuid=None):
+    def get_recommendations(self, created_after=None, user_uid=None):
         # TODO: добавить логирование выдачи на уровне этого метода?
 
         qs = ActivityRecommendationFresh.get_fresh_queryset(created_after=created_after)
         qs = qs.prefetch_related('user').prefetch_related('item')
-        if user_uuid:
-            qs = qs.filter(user__uuid=user_uuid)
+        if user_uid:
+            qs = qs.filter(user__uid=user_uid)
         return qs
 
     def _modify(self, recommendations):

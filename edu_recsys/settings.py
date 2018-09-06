@@ -113,6 +113,12 @@ CONFIG = json.loads(open(os.path.join(BASE_DIR, 'config.json')).read())
 
 DEBUG = CONFIG.get("DEBUG", False)
 
+LABS_BASE_URL = CONFIG["LABS_BASE_URL"]
+if LABS_BASE_URL[-1] == "/":
+    LABS_BASE_URL = LABS_BASE_URL[:-1]
+
+LABS_APP_TOKEN = CONFIG["LABS_APP_TOKEN"]
+
 API_KEY = CONFIG["API_KEY"]
 
 ALLOWED_HOSTS = CONFIG["ALLOWED_HOSTS"]

@@ -28,7 +28,7 @@ class DigitalProfile(models.Model):
 
     def get_serial(self):
         return {
-            "user": self.user.uuid,
+            "user": self.user.uid,
             "archetypes": self.archetypes,
             "motivalis": self.motivalis,
             "levels": self.levels
