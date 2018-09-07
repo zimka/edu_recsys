@@ -107,17 +107,22 @@ DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S"
 STATIC_ROOT = '/var/www/edu_recsys/static/'
 STATIC_URL = '/static/'
 INSTALLED_APPS += ("rest_framework", "coreapi")
-INSTALLED_APPS += ("apps.context", "apps.core", "apps.activity", "apps.digital_profile")
+INSTALLED_APPS += ("apps.context", "apps.core", "apps.activity", "apps.digital_profile", 'apps.interpreter')
 
 CONFIG = json.loads(open(os.path.join(BASE_DIR, 'config.json')).read())
 
 DEBUG = CONFIG.get("DEBUG", False)
 
-LABS_BASE_URL = CONFIG["LABS_BASE_URL"]
-if LABS_BASE_URL[-1] == "/":
-    LABS_BASE_URL = LABS_BASE_URL[:-1]
+norm_url = lambda x: x[:-1] if x[-1]=='/' else x
+
+LABS_BASE_URL = norm_url(CONFIG["LABS_BASE_URL"])
 
 LABS_APP_TOKEN = CONFIG["LABS_APP_TOKEN"]
+
+PLE_BASE_URL = norm_url(CONFIG["PLE_BASE_URL"])
+
+PLE_APP_TOKEN = CONFIG["PLE_APP_TOKEN"]
+
 
 API_KEY = CONFIG["API_KEY"]
 
