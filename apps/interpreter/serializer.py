@@ -8,7 +8,7 @@ class NestedStudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        exclude = ("leader_id", "is_removed")
+        exclude = ("id", "leader_id", "is_removed")
 
 
 class SingleScoreComputeTaskSerializer(serializers.ModelSerializer):

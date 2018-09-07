@@ -6,12 +6,14 @@ from model_utils.models import SoftDeletableModel
 
 class Directions:
 
-    DATA_ANALYST = "Дата-аналитик"
-    BUSINESS_ARCHITECT = "Бизнес-архитектор"
-    ORGANIZER = "Организатор"
-    ENTREPRENEUR = "Предприниматель"
-    COMMUNITY_LEADER = "Лидер сообществ"
-    TECHNOLOGIST = "Технолог"
+    DATA_ANALYST = "62ad153e-1974-4249-824b-e60e33bf77f5"
+    BUSINESS_ARCHITECT = "24a0e35a-d028-4b7c-a7e6-0672a935bb37"
+    ORGANIZER = "c7048753-0f7e-41eb-8923-ae42bbecf6e7"
+    ENTREPRENEUR = "9d487640-e482-4d10-ae37-5d11f5fcc9df"
+    COMMUNITY_LEADER = "595aa802-0e83-4087-8926-68c1a61d1269"
+    TECHNOLOGIST = "dfe15fa8-1bf9-4a71-8790-b05808eaffcc"
+
+    KEYS = (DATA_ANALYST, BUSINESS_ARCHITECT, ORGANIZER, ENTREPRENEUR, COMMUNITY_LEADER, TECHNOLOGIST)
 
 
 class LoadableDumb:

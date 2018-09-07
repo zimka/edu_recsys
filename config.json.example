@@ -2,13 +2,13 @@
   "ALLOWED_HOSTS": [
     "0.0.0.0"
   ],
-  "API_KEY": "API_KEY",
+  "API_KEY": false,
   "BROKER_URL": "amqp://{user}:{password}@{host}:{port}/{vhost}",
   "DATABASE": {
     "ENGINE": "django.db.backends.mysql",
-    "NAME": "{db_name}",
-    "USER": "{user}",
-    "PASSWORD": "{password}",
+    "NAME": "basename",
+    "USER": "user",
+    "PASSWORD": "password",
     "HOST": "localhost",
     "PORT": "3306",
     "OPTIONS": {
@@ -18,6 +18,17 @@
       "CHARSET": "UTF8"
     }
   },
-  "DEBUG": false,
-  "SECRET_KEY": "some_secret_string"
+  "DEBUG": true,
+  "DP_APP_TOKEN": "token",
+  "DP_BASE_URL": "https://dp.u2035dev.ru",
+  "LABS_APP_TOKEN": "token",
+  "LABS_BASE_URL": "https://labs.u2035dev.ru",
+  "LRS_AUTH_TOKEN": "string",
+  "LRS_BASE_URL": "https://lrs.2035.university",
+  "LRS_ARCHETYPES_GUID": "talkwebbot",
+  "PLE_APP_TOKEN": "token",
+  "PLE_BASE_URL": "https://my.2035.university",
+  "PLE_GUID_UUIDS": {
+    "knowledge": "9d55706e-b0d9-44c2-b739-20309ccbd8bf"
+  }
 }
