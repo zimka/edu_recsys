@@ -130,6 +130,11 @@ LRS_BASE_URL = norm_url(CONFIG["LRS_BASE_URL"])
 LRS_AUTH_TOKEN = CONFIG["LRS_AUTH_TOKEN"]
 LRS_ARCHETYPES_GUID = CONFIG["LRS_ARCHETYPES_GUID"]
 
+
+DIAGNOSTICS_V0_GUID_TO_COMMON = CONFIG["DIAGNOSTICS_V0_GUID_TO_COMMON"]
+DIAGNOSTICS_V0_NORM = CONFIG["DIAGNOSTICS_V0_NORM"]
+
+
 API_KEY = CONFIG["API_KEY"]
 
 ALLOWED_HOSTS = CONFIG["ALLOWED_HOSTS"]
@@ -171,8 +176,8 @@ if DEBUG:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
 
+"""
 LOGFILE =  CONFIG.get("LOGFILE", "/var/log/edurecsystmp.log")
-
 LOGGING = {
     'disable_existing_loggers': False,
     'version': 1,
@@ -206,7 +211,4 @@ LOGGING = {
     }
 }
 
-if DEBUG:
-    # make all loggers use the console.
-    for logger in LOGGING['loggers']:
-        LOGGING['loggers'][logger]['handlers'] = ['console']
+"""

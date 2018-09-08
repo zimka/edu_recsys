@@ -6,9 +6,9 @@
   "BROKER_URL": "amqp://{user}:{password}@{host}:{port}/{vhost}",
   "DATABASE": {
     "ENGINE": "django.db.backends.mysql",
-    "NAME": "basename",
-    "USER": "user",
-    "PASSWORD": "password",
+    "NAME": "unti_recs",
+    "USER": "",
+    "PASSWORD": "",
     "HOST": "localhost",
     "PORT": "3306",
     "OPTIONS": {
@@ -19,16 +19,32 @@
     }
   },
   "DEBUG": true,
-  "DP_APP_TOKEN": "token",
+  "DIAGNOSTICS_V0_GUID_TO_COMMON": {
+    "WEFknowledge":"knowledge",
+    "WEFbehavior": "behaviour",
+    "WEFtech": "tech",
+    "WEFsurvey": "survey"
+  },
+  "DIAGNOSTICS_V0_NORM":{
+    "62ad153e-1974-4249-824b-e60e33bf77f5": 0.5,
+    "24a0e35a-d028-4b7c-a7e6-0672a935bb37": 0.5,
+    "c7048753-0f7e-41eb-8923-ae42bbecf6e7": 0.5,
+    "9d487640-e482-4d10-ae37-5d11f5fcc9df": 0.5,
+    "595aa802-0e83-4087-8926-68c1a61d1269": 0.5,
+    "dfe15fa8-1bf9-4a71-8790-b05808eaffcc": 0.5
+  },
+  "DP_APP_TOKEN": "",
   "DP_BASE_URL": "https://dp.u2035dev.ru",
-  "LABS_APP_TOKEN": "token",
+  "LABS_APP_TOKEN": "",
   "LABS_BASE_URL": "https://labs.u2035dev.ru",
-  "LRS_AUTH_TOKEN": "string",
+  "LRS_AUTH_TOKEN": "",
   "LRS_BASE_URL": "https://lrs.2035.university",
-  "LRS_ARCHETYPES_GUID": "talkwebbot",
-  "PLE_APP_TOKEN": "token",
+  "LRS_ARCHETYPES_GUID": "WEFbehavior",
+  "PLE_APP_TOKEN": "",
   "PLE_BASE_URL": "https://my.2035.university",
   "PLE_GUID_UUIDS": {
-    "knowledge": "9d55706e-b0d9-44c2-b739-20309ccbd8bf"
+    "WEFknowledge": "9d55706e-b0d9-44c2-b739-20309ccbd8bf",
+    "WEFsurvey": "ab5ee43d-6282-454c-ba28-90109700881f",
+    "WEFtech": "e8e4e855-ee13-4be6-b789-14eb4b52667a"
   }
 }

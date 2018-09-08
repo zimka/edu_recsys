@@ -1,5 +1,5 @@
 import logging
-from uuid import uuid4
+from uuid import uuid4, UUID
 from django.db import models
 from jsonfield import JSONField
 from apps.context.models import Student, Directions
@@ -53,16 +53,27 @@ class SingleScoreComputeTask(ComputeTask):
         self.input = input
 
     def _compute_score(self):
-        def hack():
-            import random
-            result = {}
-            for k in Directions.KEYS:
-                result[k] = random.randint(0, 100)
-            return result
-        h = hack()
-        self.output = h
+        from .compute.v0 import compute_v0
+        self.output = compute_v0(self.input)
 
     def _notify(self):
-        success = DpApiClient().set_single_score(self.user.uid, self.output)
+        success = False#DpApiClient().set_single_score(self.user.uid, self.output)
         if success:
             self.complete = True
+
+
+class PleQuestionIdUuidMap(models.Model):
+    """
+    100% костыль
+    """
+    uuid = models.UUIDField()
+    ple_id = models.IntegerField()
+
+    @classmethod
+    def get_id_by_uuid(cls, question_uuid):
+        if isinstance(question_uuid, str):
+            question_uuid = UUID(question_uuid)
+        try:
+            return cls.objects.get(uuid=question_uuid).ple_id
+        except cls.DoesNotExist:
+            return None
