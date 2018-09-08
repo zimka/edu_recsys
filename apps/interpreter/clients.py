@@ -31,7 +31,7 @@ class PleApiClient:
             "unti_id": user_uid,
         }
         response = requests.get(current_url, params=query_params)
-
+        log.info("Fetch data from PLE: {}, {} - {}".format(current_url, query_params, response))
         if response.ok:
             return response.json()["result"]
         else:
@@ -83,6 +83,8 @@ class LrsApiClient:
 
         current_url = self.base_url + self.uri_data
         response = requests.get(self.base_url + self.uri_data, params=params, headers=headers)
+        log.info("Fetch data from LRS: {}, {} - {}".format(current_url, params, response))
+
         if response.ok:
             statements = response.json()["statements"]
             if not len(statements):

@@ -16,10 +16,10 @@ from .serializer import SingleScoreComputeTaskSerializer
 log = logging.getLogger(__name__)
 
 
-class SinlgleScoreComputeTaskViewset(mixins.CreateModelMixin,
-                   mixins.RetrieveModelMixin,
-                   mixins.ListModelMixin,
-                   GenericViewSet):
+class SingleScoreComputeTaskViewset(mixins.CreateModelMixin,
+                                    mixins.RetrieveModelMixin,
+                                    mixins.ListModelMixin,
+                                    GenericViewSet):
     """
     Создание и чтение задач интерпретации
     """
@@ -35,4 +35,3 @@ class SinlgleScoreComputeTaskViewset(mixins.CreateModelMixin,
             return SingleScoreComputeTask.objects.filter(user__uid=uid)
         else:
             return SingleScoreComputeTask.objects.all()
-

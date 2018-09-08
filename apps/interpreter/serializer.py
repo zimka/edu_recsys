@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from apps.context.models import Student
 from .models import SingleScoreComputeTask
+import json
 
 
 class NestedStudentSerializer(serializers.ModelSerializer):
@@ -23,4 +24,13 @@ class SingleScoreComputeTaskSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = validated_data.pop("user")
         student, created = Student.objects.get_or_create(**user)
-        return SingleScoreComputeTask.objects.create(user=student, **validated_data)
+        input = validated_data.pop('input', '{}')
+        if isinstance(input, str):
+            try:
+                input = json.loads(input)
+            except ValueError:
+                input = None
+
+        obj = SingleScoreComputeTask.objects.create(user=student, input=input)
+        obj.compute_async()
+        return obj
