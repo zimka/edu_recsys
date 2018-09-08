@@ -2,7 +2,8 @@ import logging
 from uuid import uuid4, UUID
 from django.db import models
 from jsonfield import JSONField
-from apps.context.models import Student, Directions
+from model_utils.fields import AutoCreatedField
+from apps.context.models import Student
 from .tasks import compute_single_score_async
 from .clients import DpApiClient, LrsApiClient, PleApiClient
 
@@ -15,7 +16,7 @@ class ComputeTask(models.Model):
     input = JSONField(default={})
     output = JSONField(default={})
     complete = models.BooleanField(default=False)
-
+    created = AutoCreatedField()
     class Meta:
         abstract = True
 
@@ -57,7 +58,7 @@ class SingleScoreComputeTask(ComputeTask):
         self.output = compute_v0(self.input)
 
     def _notify(self):
-        success = False#DpApiClient().set_single_score(self.user.uid, self.output)
+        success = DpApiClient().set_single_score(self.user.uid, self.output)
         if success:
             self.complete = True
 

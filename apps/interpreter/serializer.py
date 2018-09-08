@@ -17,8 +17,8 @@ class SingleScoreComputeTaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SingleScoreComputeTask
-        fields = ("uuid", 'user', 'input', 'output', 'complete')
-        read_only_fields = ('uuid', 'output', 'complete')
+        fields = ("uuid", 'user', 'input', 'output', 'complete', 'created')
+        read_only_fields = ('uuid', 'output', 'complete', 'created')
         depth = 1
 
     def create(self, validated_data):
