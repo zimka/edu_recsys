@@ -130,10 +130,11 @@ LRS_BASE_URL = norm_url(CONFIG["LRS_BASE_URL"])
 LRS_AUTH_TOKEN = CONFIG["LRS_AUTH_TOKEN"]
 LRS_ARCHETYPES_GUID = CONFIG["LRS_ARCHETYPES_GUID"]
 
-
 DIAGNOSTICS_V0_GUID_TO_COMMON = CONFIG["DIAGNOSTICS_V0_GUID_TO_COMMON"]
 DIAGNOSTICS_V0_NORM = CONFIG["DIAGNOSTICS_V0_NORM"]
 
+DIRECTION_UUIDS = CONFIG["DIRECTION_UUIDS"]
+NETWORKING_MIN_NUMBER_START = CONFIG.get('NETWORKING_MIN_NUMBER_START', 3)
 
 API_KEY = CONFIG["API_KEY"]
 
@@ -175,40 +176,3 @@ if DEBUG:
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
-
-"""
-LOGFILE =  CONFIG.get("LOGFILE", "/var/log/edurecsystmp.log")
-LOGGING = {
-    'disable_existing_loggers': False,
-    'version': 1,
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple'
-        },
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': 'edu_recsys.log',
-            'formatter': 'simple'
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    }
-}
-
-"""

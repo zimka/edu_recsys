@@ -6,7 +6,10 @@ import random
 def get_sample(iterable, size):
     pool = tuple(iterable)
     n = len(pool)
-    indices = sorted(random.sample(range(n), size))
+    try:
+        indices = sorted(random.sample(range(n), size))
+    except ValueError:
+        indices = range(n)
     t = tuple(pool[i] for i in indices)
     if len(t) == 1:
         return t[0]

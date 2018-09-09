@@ -1,17 +1,20 @@
 import uuid
 
 from django.db import models
+from django.conf import settings
 from model_utils.models import SoftDeletableModel
+
+direction_uuids = settings.DIRECTION_UUIDS
 
 
 class Directions:
 
-    DATA_ANALYST = "62ad153e-1974-4249-824b-e60e33bf77f5"
-    BUSINESS_ARCHITECT = "24a0e35a-d028-4b7c-a7e6-0672a935bb37"
-    ORGANIZER = "c7048753-0f7e-41eb-8923-ae42bbecf6e7"
-    ENTREPRENEUR = "9d487640-e482-4d10-ae37-5d11f5fcc9df"
-    COMMUNITY_LEADER = "595aa802-0e83-4087-8926-68c1a61d1269"
-    TECHNOLOGIST = "dfe15fa8-1bf9-4a71-8790-b05808eaffcc"
+    DATA_ANALYST = direction_uuids['DATA_ANALYST']
+    BUSINESS_ARCHITECT = direction_uuids['BUSINESS_ARCHITECT']
+    ORGANIZER = direction_uuids['ORGANIZER']
+    ENTREPRENEUR = direction_uuids['ENTREPRENEUR']
+    COMMUNITY_LEADER = direction_uuids['COMMUNITY_LEADER']
+    TECHNOLOGIST = direction_uuids['TECHNOLOGIST']
 
     KEYS = (DATA_ANALYST, BUSINESS_ARCHITECT, ORGANIZER, ENTREPRENEUR, COMMUNITY_LEADER, TECHNOLOGIST)
 
