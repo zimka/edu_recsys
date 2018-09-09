@@ -6,6 +6,7 @@ from model_utils.fields import AutoCreatedField
 from apps.context.models import Student
 from .tasks import compute_single_score_async
 from .clients import DpApiClient, LrsApiClient, PleApiClient
+from apps.networking.tasks import create_networking_recommendations
 
 
 log = logging.getLogger(__name__)
@@ -33,6 +34,7 @@ class SingleScoreComputeTask(ComputeTask):
 
     def compute_async(self):
         compute_single_score_async.delay(self.uuid)
+        create_networking_recommendations.delay(self.user.uid)
 
     def compute(self):
         if not self.input:

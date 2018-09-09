@@ -107,7 +107,7 @@ DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S"
 STATIC_ROOT = '/var/www/edu_recsys/static/'
 STATIC_URL = '/static/'
 INSTALLED_APPS += ("rest_framework", "coreapi")
-INSTALLED_APPS += ("apps.context", "apps.core", "apps.activity", "apps.digital_profile", 'apps.interpreter')
+INSTALLED_APPS += ("apps.context", "apps.core", "apps.activity", "apps.digital_profile", 'apps.interpreter', 'apps.networking')
 
 CONFIG = json.loads(open(os.path.join(BASE_DIR, 'config.json')).read())
 
