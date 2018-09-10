@@ -396,5 +396,9 @@ def compute_v0(results):
     log.info(scores)
     res = pd.DataFrame(scores).sum().to_dict()
     norm = settings.DIAGNOSTICS_V0_NORM
-
-    return dict((key, int(min(value/norm[key], 100))) for key, value in res.items())
+    shift = settings.DIAGNOSTICS_V0_MU
+    results = {}
+    for key, value in res.items():
+        score = value/norm[key] + shift[key]
+        results[key] = min(int(score), 100)
+    return results
