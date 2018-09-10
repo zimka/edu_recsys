@@ -377,20 +377,20 @@ def compute_survey(results):
     return df.sum().to_dict()
 
 
-def compute_v0(results):
+def compute_v0(data):
     import logging
     log = logging.getLogger(__name__)
     mapping = settings.DIAGNOSTICS_V0_GUID_TO_COMMON
     common_names = {
-        "behavior": compute_archetypes,
+        "behavior_archetypes": compute_archetypes,
         "knowledge": compute_knowledge,
         "survey": compute_survey,
         "tech": compute_tech
     }
     scores = []
-    for key, value in results.items():
+    for key, value in data.items():
         common = mapping.get(key, None)
-        log.info("{} {} {}".format(key, common, results.keys()))
+        log.info("{} {} {}".format(key, common, data.keys()))
         if common in common_names:
             scores.append(common_names[common](value))
     log.info(scores)
@@ -402,3 +402,23 @@ def compute_v0(results):
         score = value/norm[key] + shift[key]
         results[key] = min(int(score), 100)
     return results
+
+
+def add_archetype_motivalis_uuids(data):
+    results = {}
+    inverse_mapping = dict((v,k) for (k, v) in settings.DIAGNOSTICS_V0_GUID_TO_COMMON.items())
+    archetypes_map_uuids = settings.DIAGNOSTICS_V0_ARCHETYPES_UUIDS
+    archetypes = data.get(inverse_mapping ['behaviour_archetypes'], {})
+    for a,value in archetypes.items():
+        key = archetypes_map_uuids.get(a)
+        if key:
+            results[key] = value
+
+    motivalis_map_uuids = settings.DIAGNOSTICS_V0_MOTIVALIS_UUIDS
+    motivalis = data.get(inverse_mapping ['behaviour_motivalis'], {})
+    for a,value in motivalis.items():
+        key = motivalis_map_uuids.get(a)
+        if key:
+            results[key] = value
+    return results
+

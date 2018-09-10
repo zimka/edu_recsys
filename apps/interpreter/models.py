@@ -32,6 +32,11 @@ class SingleScoreComputeTask(ComputeTask):
     def __str__(self):
         return str(self.user)
 
+    @classmethod
+    def run_for_user(cls, user):
+        task = cls.objects.create(user=user)
+        task.compute_async()
+
     def compute_async(self):
         compute_single_score_async.delay(self.uuid)
         create_networking_recommendations.delay(self.user.uid)
@@ -50,14 +55,20 @@ class SingleScoreComputeTask(ComputeTask):
         diagnostics = PleApiClient().get_user_diagnostics(self.user.uid)
         if diagnostics is not None:
             input.update(diagnostics)
-        archetypes = LrsApiClient().get_archetypes(self.user.uid)
+        client = LrsApiClient()
+        archetypes = client.get_archetypes(self.user.uid)
+        motivalis = client.get_motivalis(self.user.uid)
         if archetypes is not None:
-            input.update(archetypes)
+            input.update({client.archetypes_guid + "_archetypes": archetypes})
+        if archetypes is not None:
+            input.update({client.archetypes_guid + "_motivalis": motivalis})
         self.input = input
 
-    def _compute_score(self):
-        from .compute.v0 import compute_v0
+    def _compute_score(self, add_motibalis_archetypes=True):
+        from .compute.v0 import compute_v0, add_archetype_motivalis_uuids
         self.output = compute_v0(self.input)
+        if add_motibalis_archetypes:
+            self.output.update(add_archetype_motivalis_uuids(self.input))
 
     def _notify(self):
         success = DpApiClient().set_single_score(self.user.uid, self.output)

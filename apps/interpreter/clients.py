@@ -101,11 +101,17 @@ class LrsApiClient:
             ))
 
     def get_archetypes(self, unti_id):
+        return self._get_key(unti_id, "archetypes")
+
+    def get_motivalis(self, unti_id):
+        return self._get_key(unti_id, "motivation")
+
+    def _get_key(self, unti_id, key):
         data = self._get_user_result(str(unti_id), self.archetypes_guid)
         if data is not None:
             try:
                 ext = data['extensions']
-                k = self.ple_base_url + "/xapi/v1/results/archetypes"
+                k = self.ple_base_url + "/xapi/v1/results/{}".format(key)
                 return ext[k]
             except KeyError as e:
                 log.error("LRS fetch error:{}".format(e))
