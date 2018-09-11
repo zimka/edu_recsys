@@ -75,7 +75,7 @@ def cosine_similarity(src_vec, target_vecs):
     return 1 - np.array([sp.spatial.distance.cosine(src_vec, v) for v in target_vecs])
 
 
-def jaccard_similarity(s1, s2, min_len=0):
+def jaccard_similarity(s1, s2, min_len=1):
     union_len = len(s1 | s2)
     if union_len < min_len:
         return 0
@@ -103,6 +103,11 @@ def parse_competence(competences, c_id):
 
 
 def parse_competences(competences):
+    try:
+        if not len(competences):
+            return None
+    except:
+        return None
     if len(competences[0]) < 2:
         return None
 
