@@ -13,7 +13,7 @@
    souce env/bin/activate
 
 
-2. Установка пакетов
+2. Установка пакетов и apt-requirements
 
   ::
 
@@ -33,7 +33,7 @@
 
     python manage.py migrate
 
-5. Установка периодического systemd/cron запуска management команд update_activity_recommendations, load_activities
+5. Установка периодического systemd/cron запуска management команд update_activity_recommendations, update_networking_recommendations, load_activities
 
 6. Подгрузка дефолтных данных в базу
 
