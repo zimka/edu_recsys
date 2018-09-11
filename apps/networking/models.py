@@ -15,11 +15,3 @@ class NetworkingRecommendation(models.Model):
     user = models.OneToOneField(Student, on_delete=models.PROTECT)
     recommendations = JSONField()
     created = AutoLastModifiedField()
-
-    @classmethod
-    def create(cls, user):
-        networking_start = getattr(settings, "NETWORKING_MIN_NUMBER_START", 0)
-        if not networking_start or Student.objects.count() > networking_start:
-            data = get_networking_json(user)
-            return cls.objects.create(user=user, recommendations=data)
-
