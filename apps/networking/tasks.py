@@ -8,11 +8,14 @@ log = logging.getLogger(__name__)
 
 
 @shared_task
-def create_networking_recommendations(overwrite):
+def create_networking_recommendations(overwrite=False):
    _update_all_recommendations(overwrite)
 
 
-def _update_all_recommendations(overwrite):
+def _update_all_recommendations(overwrite, save=True, single_student_uid=None):
+    log.info("Started recommendation update : oveewrite={}, save={}, student={}".format(
+        overwrite, save, single_student_uid
+    ))
     students = Student.objects.all()
     validated_students, sim_competence, sim_experience, sim_interest = compute_similarities(students)
     recommender = NetworkingRecommender(
@@ -25,8 +28,10 @@ def _update_all_recommendations(overwrite):
         has_recs = set(n.user for n in NetworkingRecommendation.objects.all())
         all_users = set(validated_students)
         validated_students = list(all_users - has_recs)
-
+    results = []
     for vst in validated_students:
+        if single_student_uid is not None and vst.uid!=single_student_uid:
+            continue
         recs = {}
         recs['coffee'] = recommender.recommend_man(vst.uid, [], 'experience')[0]
         recs['look'] = recommender.recommend_man(vst.uid, [recs['coffee']], 'competences')[0]
@@ -37,4 +42,6 @@ def _update_all_recommendations(overwrite):
             {"type": 'discuss', 'target_ids': [recs['discuss']]},
             {"type": 'look', 'target_ids': [recs['look']]}
         ]}
-        current.save()
+        results.append(current)
+        if save:
+            current.save()

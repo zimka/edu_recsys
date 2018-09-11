@@ -1,19 +1,15 @@
 import numpy as np
 import scipy as sp
 import pandas as pd
-from apps.interpreter.models import SingleScoreComputeTask
 from .old import pairwise, jaccard_similarity, text_series_to_vecs, get_word_vecs, get_word_weights, \
     aggregate_similarity_matrices, prepare_environment_data, prepare_competence_with_income_data, text_to_vec, minimum_cosine_distance
 
 
 from django.conf import settings
+default_question_map = getattr(settings, "NETWORKING_QUESTION_MAP")
 
 word_vecs = get_word_vecs()
 word_weights = get_word_weights()
-
-q_uuids = {
-    "news": "f9289823-a6ba-4437-85fa-a5f6731dbbd8"
-}
 
 
 def get_question_answer(answers, quid):
@@ -24,9 +20,6 @@ def get_question_answer(answers, quid):
             if a['question']['uuid'] == quid:
                 return a['answers']
     return []
-
-
-default_question_map = getattr(settings, "NETWORKING_QUESTION_MAP")
 
 
 def build_df(users_diagnostics, quids_guids):
@@ -140,6 +133,8 @@ def get_competence_similarity(user_diagnostics_df, question_map=default_question
 
 
 def compute_similarities(students_desired, question_map=default_question_map):
+    from apps.interpreter.models import SingleScoreComputeTask
+
     uids = [u.uid for u in students_desired]
     students_profiles = SingleScoreComputeTask.objects.filter(complete=True, user__uid__in=uids)
     user_diagnostics = {}
@@ -154,8 +149,3 @@ def compute_similarities(students_desired, question_map=default_question_map):
            get_competence_similarity(df, question_map), \
            get_interests_similarity(df, question_map), \
            get_experience_similarity(df, question_map)
-
-
-
-
-

@@ -4,7 +4,7 @@ from django.db import models
 from jsonfield import JSONField
 from model_utils.fields import AutoCreatedField
 from apps.context.models import Student
-from .tasks import compute_single_score_async
+from .tasks import run_update
 from .clients import DpApiClient, LrsApiClient, PleApiClient
 
 
@@ -17,6 +17,7 @@ class ComputeTask(models.Model):
     output = JSONField(default={})
     complete = models.BooleanField(default=False)
     created = AutoCreatedField()
+
     class Meta:
         abstract = True
 
@@ -37,7 +38,7 @@ class SingleScoreComputeTask(ComputeTask):
         task.compute_async()
 
     def compute_async(self):
-        compute_single_score_async.delay(self.uuid)
+        run_update(self.uuid)
 
     def compute(self):
         if not self.input:
