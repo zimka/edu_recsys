@@ -1,14 +1,15 @@
 from django.core.management.base import BaseCommand
 from apps.networking.tasks import create_networking_recommendations
-from apps.context.models import Student
 
 
 class Command(BaseCommand):
     help = '''
-    Запуск обновления рекомендаций активности
+    Запуск обновления рекомендаций контактов
     '''
+    def add_arguments(self, parser):
+        parser.add_argument('--overwrite', dest='overwrite', type=str, default=False, help=u'Перезаписать текущие рекомендации')
+
 
     def handle(self, *args, **options):
-        users = Student.objects.filter(networkingrecommendation=None)
-        for u in users:
-            create_networking_recommendations.delay(u.uid)
+        overwrite = options.get('overwrite', False)
+        create_networking_recommendations.delay(overwrite)

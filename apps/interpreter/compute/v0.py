@@ -6,6 +6,10 @@ from apps.context.models import Directions
 from functools import partial
 
 def equals_approx(value, prec, eps=0.05):
+    try:
+        value = float(value)
+    except ValueError:
+        return False
     return abs(float(value) - float(prec)) < float(prec)*eps
 
 
@@ -230,12 +234,12 @@ def compute_archetypes(results):
         top1_vec = np.zeros(len(KEYS))
         for num, k in enumerate(KEYS):
             if k in TOP_1[d]:
-                top1_vec[num] = 0.5
+                top1_vec[num] = 1
 
         top2_vec = np.zeros(len(KEYS))
         for num, k in enumerate(KEYS):
             if k in TOP_2[d]:
-                top2_vec[num] = 0.25
+                top2_vec[num] = 0.5
         scores[d] = np.dot(top1_vec, user_vector) + np.dot(top2_vec, user_vector)
     return scores
 
@@ -365,6 +369,7 @@ def compute_survey(results):
         Directions.COMMUNITY_LEADER: COMPUTE_COMMUNITY
     }
     scores = []
+    mult = getattr(settings, "DIAGNOSTICS_V0_TECHIE_MULTIPLIER", 1.5)
     for d in Directions.KEYS:
         current_rules = rules[d]
         current_directions = COMPUTE_DEFAULT_DIRECTIONS.copy()
@@ -374,7 +379,8 @@ def compute_survey(results):
             t = TestAnswer.from_results(q)
             scores.append(checker.get_score(t))
     df = pd.DataFrame(scores)
-    return df.sum().to_dict()
+
+    return (mult*df.sum()).to_dict()
 
 
 def compute_v0(data):
