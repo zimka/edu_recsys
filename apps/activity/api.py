@@ -1,4 +1,3 @@
-import uuid
 from datetime import datetime
 import pytz
 from django.conf import settings
@@ -18,7 +17,7 @@ class ActivityRecommendationView(ListAPIView):
 
     **Пример**
 
-        GET /api/v0/activity/fresh/?created_after=%Y-%m-%dT%H:%M:%S&user_uuid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        GET /api/v0/activity/fresh/?created_after=%Y-%m-%dT%H:%M:%S&user_uid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
     **Response**
 
@@ -30,9 +29,9 @@ class ActivityRecommendationView(ListAPIView):
 
         * results: list
 
-            * user: uuid
+            * user: uid(int)
 
-            * activity: uuid
+            * activity: uid
 
             * score: float 0-1
 
@@ -54,12 +53,12 @@ class ActivityRecommendationView(ListAPIView):
                 ),
             ),
             coreapi.Field(
-                "user_uuid",
+                "user",
                 location="query",
                 required=False,
                 schema=coreschema.String(
-                    title="user_uuid",
-                    description="Filter by specific user uuid"
+                    title="user",
+                    description="Filter by specific user uid"
                 ),
             ),
         ]
@@ -71,10 +70,10 @@ class ActivityRecommendationView(ListAPIView):
             created_after = datetime.strptime(created_after, settings.DATETIME_FORMAT)
             if isinstance(created_after, datetime):
                 created_after.replace(tzinfo=pytz.utc)
-        user_uuid = self.request.query_params.get("user_uuid")
+        uid = self.request.query_params.get("user")
         try:
-            if user_uuid is not None:
-                user_uuid = uuid.UUID(user_uuid)
+            if uid is not None:
+                uid = int(uid)
         except ValueError:
-            raise ParseError("Invalid user_uuid format")
-        return ActivityRecommendationManager().get_recommendations(created_after, user_uuid)
+            raise ParseError("Invalid uid format")
+        return ActivityRecommendationManager().get_recommendations(created_after, uid)

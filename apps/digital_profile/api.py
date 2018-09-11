@@ -44,13 +44,13 @@ class UserDiagnosticsResultView(APIView):
         ]
     )
 
-    def post(self, request, user_uuid):
+    def post(self, request, user_uid):
         isle_context = IsleContext.get_from_name(request.data.get("context"))
         if not isle_context:
             isle_context = IsleContext.get_default()
         if not isle_context:
            return Response({"detail": "Unknown context"}, status=400)
-        student, created = Student.objects.get_or_create(uuid=user_uuid)
+        student = Student.get(uid=user_uid, create=True)
         data = request.data.get('data')
 
         if not isinstance(data, dict):
@@ -73,9 +73,9 @@ class DigitalProfileView(APIView):
     permission_classes = ApiKeyPermission,
     schema = AutoSchema()
 
-    def get(self, request, user_uuid):
+    def get(self, request, user_uid):
         try:
-            student = Student.objects.get(uuid=user_uuid)
+            student = Student.get(uid=user_uid)
         except Student.DoesNotExist:
             return Response({"detail": "Invalid user uuid"}, status=400)
 

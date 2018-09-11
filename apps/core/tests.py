@@ -13,7 +13,7 @@ from .api_utils import RecommendationSerializer
 def create_test_user(id=None):
     if id is None:
         id = random.randint(0, 1000)
-    Student.objects.create(leader_id=id, uuid=uuid4())
+    Student.objects.create(uid=id, leader_id=random.randint(0, 1000))
 
 
 def create_test_activity(title=None):
@@ -99,25 +99,22 @@ class ActivityRecommendersTestCase(BaseActRecTestCase):
         self.assertTrue(all([v == self.N_ACTS for k, v in users.items()]))
 
     def test_const_for_usergroup(self):
-        """
-        Для всех юзеров и активностей пол
-        """
         lvl = 0.35
         cr35 = ConstRecommender(score_const=lvl)
-        users = Student.objects.filter(leader_id__lt=self.N_USERS - 1)
-        self.assertTrue(len(users) == (self.N_USERS - 1))
+
+        users = Student.objects.all()
+        length = int(len(users)/2)
+        users = [users[i] for i in range(length)]
+        self.assertTrue(len(users) == length)
 
         recs = cr35.get_recommendations(users)
         rnd = lambda x: int(x * 100)
         self.assertTrue(all([rnd(r.score) == rnd(lvl) for r in recs]))
 
-        users = Counter([r.user.leader_id for r in recs])
+        users = Counter([str(r.user) for r in recs])
         self.assertTrue(all([v == self.N_ACTS for k, v in users.items()]))
 
     def test_const_for_activity_filter(self):
-        """
-        Для всех юзеров и активностей пол
-        """
         lvl = 0.45
         cr35 = ConstRecommender(score_const=lvl)
         activity_filter = lambda x: x.title != "Act0"
@@ -126,6 +123,6 @@ class ActivityRecommendersTestCase(BaseActRecTestCase):
         rnd = lambda x: int(x * 100)
         self.assertTrue(all([rnd(r.score) == rnd(lvl) for r in recs]))
 
-        users = Counter([r.user.leader_id for r in recs])
+        users = Counter([str(r.user) for r in recs])
         self.assertTrue(len(users) == self.N_USERS)
         self.assertTrue(all([v == (self.N_ACTS - 1) for k, v in users.items()]))

@@ -38,6 +38,17 @@ class ActivityRecommenderManagerTestCase(BaseActRecTestCase):
         self.assertTrue(len(generated_users) == 1)
         self.assertTrue(list(generated_users)[0] == u)
 
+    def test_update_changes_fresh_created(self):
+        lvl = 0.3
+        man = ActivityRecommendationManager(forced_config=get_test_config(lvl))
+
+        man.do_update()
+        recs = ActivityRecommendationFresh.objects.all()
+        highest_date = max([x.created for x in recs])
+        man.do_update()
+        recs = ActivityRecommendationFresh.objects.all()
+        self.assertTrue(all([x.created > highest_date for x in recs]))
+
 
 class ActivityRecommendationTestCase(BaseActRecTestCase):
     def setUp(self):
@@ -96,3 +107,4 @@ class ActivityRecommendationTestCase(BaseActRecTestCase):
         many = ActivityRecommendationFresh.objects.all()
         serial = RecommendationSerializer(many, many=True)
         self.assertTrue(len(serial.data) == len(many))
+
