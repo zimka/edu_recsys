@@ -4,7 +4,6 @@ from model_utils.fields import AutoLastModifiedField
 from django.db import models
 from django.conf import settings
 from jsonfield import JSONField
-from .compute import get_networking_json
 
 
 class NetworkingRecommendation(models.Model):
