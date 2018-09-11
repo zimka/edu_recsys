@@ -50,7 +50,7 @@ def _get_news(user_diagnostics_df, question_map):
     news_info = user_diagnostics_df[quid]
     news_info = news_info.dropna().map(np.unique).map(lambda x: set(x) - {'ничего из перечисленного.'})
     news_info = news_info[news_info.map(len) > 0]
-    return pairwise(news_info, jaccard_similarity)
+    return pairwise(news_info, jaccard_similarity, user_diagnostics_df.index)
 
 
 def _get_hobby(user_diagnostics_df, question_map):

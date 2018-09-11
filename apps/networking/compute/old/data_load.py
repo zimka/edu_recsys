@@ -7,8 +7,11 @@ def get_word_vecs():
     try:
         return get_word_vecs_fast()
     except IOError:
-        return get_word_vecs_long()
-
+        df = get_word_vecs_long()
+        path = os.path.dirname(os.path.abspath(__file__))
+        name = path + "/w2v_extended.pickle"
+        df.to_pickle(name)
+        return df
 
 def get_word_vecs_fast():
     path = os.path.dirname(os.path.abspath(__file__))

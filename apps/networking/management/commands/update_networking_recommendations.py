@@ -7,9 +7,8 @@ class Command(BaseCommand):
     Запуск обновления рекомендаций контактов
     '''
     def add_arguments(self, parser):
-        parser.add_argument('--overwrite', dest='overwrite', type=str, default=False, help=u'Перезаписать текущие рекомендации')
-
+        parser.add_argument('--for_new_only', dest='for_new_only', type=str, default=False, help=u'Не перезаписывать текущие рекомендации')
 
     def handle(self, *args, **options):
-        overwrite = options.get('overwrite', False)
-        create_networking_recommendations.delay(overwrite)
+        for_new_only = options.get('for_new_only', True)
+        create_networking_recommendations.delay(for_new_only)

@@ -306,11 +306,7 @@ def pairwise(series, func, full_index=None):
 
 def aggregate_similarity_matrices(matrices: List[DataFrame], weights: np.array):
     assert len(matrices) == len(weights)
-    try:
-        similarities = np.concatenate([np.atleast_3d(m.values) for m in matrices], axis=2)
-    except ValueError:
-        #TODO: add logging
-        return DataFrame(0.5, index=matrices[0].index, columns=matrices[0].columns)
+    similarities = np.concatenate([np.atleast_3d(m.values) for m in matrices], axis=2)
     user_similarity = np.nan_to_num(similarities * weights).sum(axis=2)
     divider = (~np.isnan(similarities) * weights).sum(axis=2)
     divider[divider < 1e-10] = 1
