@@ -43,6 +43,7 @@ class Activity(SoftDeletableModel, LoadableDumb):
 class Student(SoftDeletableModel, LoadableDumb):
     uid = models.IntegerField(editable=False, unique=True)
     leader_id = models.IntegerField(unique=True, null=True)
+    is_staff = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.uid)

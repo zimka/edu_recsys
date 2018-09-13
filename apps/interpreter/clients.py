@@ -67,7 +67,7 @@ class LrsApiClient:
         self.ple_base_url = ple_base_url
         self.archetypes_guid = settings.LRS_ARCHETYPES_GUID
 
-    def _get_user_result(self, unti_id_filter=None, activity_guid_filter=None):
+    def _get_user_result(self, unti_id_filter=None, activity_guid_filter=None, get_all=False):
         headers = {
             "Authorization": self.app_token,
             'X-Experience-API-Version': '1.0.3'
@@ -89,6 +89,8 @@ class LrsApiClient:
             statements = response.json()["statements"]
             if not len(statements):
                 return
+            if get_all:
+                return statements
             last_statement = statements[0]
             return last_statement['result']
         else:

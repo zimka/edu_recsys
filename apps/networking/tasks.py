@@ -9,7 +9,8 @@ log = logging.getLogger(__name__)
 
 @shared_task
 def create_networking_recommendations(for_new_only=False):
-   _update_all_recommendations(for_new_only)
+    staff_uids = list(x.uid for x in Student.objects.filter(is_staff=True))
+    _update_all_recommendations(for_new_only, starting_contact_uids=staff_uids)
 
 
 def _update_all_recommendations(for_new_only, save=True, single_student_uid=None, starting_contact_uids=[]):
