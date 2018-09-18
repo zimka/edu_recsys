@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='NetworkingRecommendation',
+            name='NetworkingRecommendationDeprecated',
             fields=[
                 ('uuid', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
                 ('recommendations', jsonfield.fields.JSONField(dump_kwargs={'cls': jsonfield.encoder.JSONEncoder, 'separators': (',', ':')}, load_kwargs={})),

@@ -1,22 +1,42 @@
+import random
 from django.db.utils import IntegrityError
 
 from apps.context.models import Student, Activity
 from apps.core.recommender import ConstRecommender
 from apps.core.raw_recommendation import RawRecommendation
-from apps.core.api_utils import RecommendationSerializer
-from apps.core.tests import BaseActRecTestCase
+from apps.core.tests import TestCase, create_test_user
 
 from .manager import ActivityRecommendationManager
 from .models import ActivityRecommendationFresh, ActivityRecommendationLogs
+from .api_utils import ActivityRecommendationSerializer
 
 
-def get_test_config(lvl=0.42):
+def get_test_config(lvl=0.42, items_space=None):
+    if items_space is None:
+        items_space = Activity.objects.all()
     return {
-        ConstRecommender(score_const=lvl): Student.objects.all()
+        ConstRecommender(items_space=items_space, score_const=lvl): Student.objects.all()
     }
 
 
-class ActivityRecommenderManagerTestCase(BaseActRecTestCase):
+def create_test_activity(title=None):
+    if title is None:
+        title = "Act{}".format(random.randint(0, 1000))
+    Activity.objects.create(title=title)
+
+
+class ActivityTestCase(TestCase):
+    N_USERS = 3
+    N_ACTS = 4
+
+    def setUp(self):
+        for n in range(self.N_USERS):
+            create_test_user(n)
+
+        for n in range(self.N_ACTS):
+            create_test_activity(title="Act{}".format(n))
+
+class ActivityRecommenderManagerTestCase(ActivityTestCase):
     def test_manager_update(self):
         lvl = 0.45
         man = ActivityRecommendationManager(forced_config=get_test_config(lvl))
@@ -50,7 +70,7 @@ class ActivityRecommenderManagerTestCase(BaseActRecTestCase):
         self.assertTrue(all([x.created > highest_date for x in recs]))
 
 
-class ActivityRecommendationTestCase(BaseActRecTestCase):
+class ActivityRecommendationTestCase(ActivityTestCase):
     def setUp(self):
         super().setUp()
         self.lvl = 0.3
@@ -103,8 +123,8 @@ class ActivityRecommendationTestCase(BaseActRecTestCase):
 
     def test_serialization(self):
         single = ActivityRecommendationFresh.objects.first()
-        serial = RecommendationSerializer(single)
+        serial = ActivityRecommendationSerializer(single)
         many = ActivityRecommendationFresh.objects.all()
-        serial = RecommendationSerializer(many, many=True)
+        serial = ActivityRecommendationSerializer(many, many=True)
         self.assertTrue(len(serial.data) == len(many))
 

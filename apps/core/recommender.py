@@ -9,12 +9,8 @@ def get_all_users():
     return Student.objects.all()
 
 
-def get_all_activities():
-    from apps.context.models import Activity
-    return Activity.objects.all()
 
-
-class BaseRecommender(ABC):
+class AbstractRecommender(ABC):
     """
     Именованный рекомендатор. Для заданных юзеров рассчитывает рекомендации
     по объектам, удовлетворяющим фильтру
@@ -33,15 +29,18 @@ class BaseRecommender(ABC):
         pass
 
 
-class BaseActivityRecommender(BaseRecommender):
+class BaseRecommender(AbstractRecommender):
+    def __init__(self, *, items_space, **kwargs):
+        self.items_space = items_space
+
     def get_recommendations(self, users=tuple(), item_filter=lambda x: True):
         if not users:
             users = get_all_users()
-        activities = list(filter(item_filter, get_all_activities()))
-        return self._get_recommendations(users, activities)
+        items = list(filter(item_filter, self.items_space))
+        return self._get_recommendations(users, items)
 
 
-class DumbRecommender(BaseActivityRecommender):
+class DumbRecommender(BaseRecommender):
     def get_name(self):
         return "dumb"
 
@@ -68,7 +67,10 @@ class RandomRecommender(DumbRecommender):
 
 
 class ConstRecommender(DumbRecommender):
-    def __init__(self, score_const=0.42):
+    def __init__(self, *, items_space, **kwargs):
+        super().__init__(items_space=items_space, **kwargs)
+        score_const = kwargs.get('score_const', 0.42)
+
         if not in_score_limits(score_const):
             raise ValueError("score_const {} not in score limits".format(score_const))
         self.score_const = score_const

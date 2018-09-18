@@ -23,8 +23,11 @@ class AbstractRecommendation(models.Model, RawRecommendation):
         return "{}/{}(({}): {}".format(self.user, self.item, self.created, self.score)
 
     @classmethod
-    def create_from_raw(cls, raw):
-        return cls.objects.create(**raw.to_kwargs())
+    def create_from_raw(cls, raw, options=None):
+        data = raw.to_kwargs()
+        if options is not None:
+            data.update(options)
+        return cls.objects.create(**data)
 
 
 class ImmutableMixin:
@@ -32,10 +35,10 @@ class ImmutableMixin:
     Примесь для изменяемых хранилищ
     """
     @classmethod
-    def put_items(cls, recommendation_items):
+    def put_items(cls, recommendation_items, options=None):
         # TODO: bulk_create
         for r in recommendation_items:
-            cls.create_from_raw(r)
+            cls.create_from_raw(r, options)
 
 
 class MutableMixin:
@@ -43,12 +46,15 @@ class MutableMixin:
     Примесь для неизменяемых хранилищ
     """
     @classmethod
-    def put_items(cls, recommendation_items):
+    def put_items(cls, recommendation_items, options=None):
         """
         Метод работает линейно от количества итемов, но вызывается
         асинхронно, поэтому это нормально
         """
         for r in recommendation_items:
-            updated = cls.objects.filter(user=r.user, item=r.item).update(**r.to_kwargs())
+            data = r.to_kwargs()
+            if options is not None:
+                data.update(options)
+            updated = cls.objects.filter(user=r.user, item=r.item).update(**data)
             if not updated:
-                cls.objects.create(**r.to_kwargs())
+                cls.objects.create(**data)

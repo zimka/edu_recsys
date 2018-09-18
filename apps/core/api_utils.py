@@ -19,7 +19,7 @@ class RecommendationSerializer(serializers.Serializer):
         return str(obj.user.get_uid())
 
     def get_item(self, obj):
-        return str(obj.item.get_uid())
+        return str(obj.item)
 
 
 class ApiKeyPermission(permissions.BasePermission):

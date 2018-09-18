@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABCMeta
-from .tasks import update_activity_recommendations
+from .tasks import update_recommendations
 from django.core.serializers import serialize
 
 
@@ -9,7 +9,7 @@ class AbstractRecommendationManager(metaclass=ABCMeta):
     и распределять пользователей по разным методам рекомендации
     """
     def run_update_async(self, **kwargs):
-        update_activity_recommendations.delay(self, **kwargs)
+        update_recommendations.delay(self, **kwargs)
 
     @abstractmethod
     def do_update(self, **kwargs):

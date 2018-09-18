@@ -1,13 +1,14 @@
 import random
-from collections import Counter
-from uuid import uuid4
+from collections import Counter, namedtuple
 
 from django.test import TestCase
 
-from apps.context.models import Activity, Student
+from apps.context.models import Student
 from apps.core.recommender import ConstRecommender
 from .raw_recommendation import RawRecommendation
 from .api_utils import RecommendationSerializer
+
+SomeItem = namedtuple("SomeItem", ["id", "title"])
 
 
 def create_test_user(id=None):
@@ -16,13 +17,13 @@ def create_test_user(id=None):
     Student.objects.create(uid=id, leader_id=random.randint(0, 1000))
 
 
-def create_test_activity(title=None):
+def create_test_item(id=0, title=None):
     if title is None:
-        title = "Act{}".format(random.randint(0, 1000))
-    Activity.objects.create(title=title)
+        title = "Item{}".format(random.randint(0, 1000))
+    return SomeItem(id=id, title=title)
 
 
-class BaseActRecTestCase(TestCase):
+class BaseRecTestCase(TestCase):
     N_USERS = 3
     N_ACTS = 4
 
@@ -30,15 +31,16 @@ class BaseActRecTestCase(TestCase):
         for n in range(self.N_USERS):
             create_test_user(n)
 
+        self.items = []
         for n in range(self.N_ACTS):
-            create_test_activity(title="Act{}".format(n))
+            self.items.append(create_test_item(id=n, title="Act{}".format(n)))
 
 
-class RecommendationObjectTest(BaseActRecTestCase):
+class RecommendationObjectTest(BaseRecTestCase):
     def test_recommendation_creation(self):
         r = RawRecommendation.from_kwargs(
             user=Student.objects.first(),
-            item=Activity.objects.first(),
+            item=self.items[0],
             score=0.42,
             source="test"
         )
@@ -50,14 +52,14 @@ class RecommendationObjectTest(BaseActRecTestCase):
     def test_comparison(self):
         r1 = RawRecommendation.from_kwargs(
             user=Student.objects.first(),
-            item=Activity.objects.first(),
+            item=self.items[0],
             score=0.42,
             source="test"
         )
 
         r2 = RawRecommendation.from_kwargs(
             user=Student.objects.first(),
-            item=Activity.objects.first(),
+            item=self.items[0],
             score=0.42,
             source="test"
         )
@@ -68,7 +70,7 @@ class RecommendationObjectTest(BaseActRecTestCase):
     def test_serialization(self):
         r1 = RawRecommendation.from_kwargs(
             user=Student.objects.first(),
-            item=Activity.objects.first(),
+            item=self.items[0],
             score=0.42,
             source="test"
         )
@@ -77,7 +79,7 @@ class RecommendationObjectTest(BaseActRecTestCase):
         self.assertTrue(set(data.keys()) == {'created', 'score', 'user', 'item'})
         r2 = RawRecommendation.from_kwargs(
             user=Student.objects.first(),
-            item=Activity.objects.first(),
+            item=self.items[0],
             score=0.99,
             source="test"
         )
@@ -85,10 +87,10 @@ class RecommendationObjectTest(BaseActRecTestCase):
         self.assertTrue(len(data) == 2)
 
 
-class ActivityRecommendersTestCase(BaseActRecTestCase):
+class ItemRecommendersTestCase(BaseRecTestCase):
     def test_const_for_all(self):
         lvl = 0.25
-        cr25 = ConstRecommender(score_const=lvl)
+        cr25 = ConstRecommender(items_space=self.items, score_const=lvl)
 
         recs = cr25.get_recommendations()
         rnd = lambda x: int(x * 100)
@@ -100,7 +102,7 @@ class ActivityRecommendersTestCase(BaseActRecTestCase):
 
     def test_const_for_usergroup(self):
         lvl = 0.35
-        cr35 = ConstRecommender(score_const=lvl)
+        cr35 = ConstRecommender(items_space=self.items, score_const=lvl)
 
         users = Student.objects.all()
         length = int(len(users)/2)
@@ -114,12 +116,12 @@ class ActivityRecommendersTestCase(BaseActRecTestCase):
         users = Counter([str(r.user) for r in recs])
         self.assertTrue(all([v == self.N_ACTS for k, v in users.items()]))
 
-    def test_const_for_activity_filter(self):
+    def test_const_for_item_filter(self):
         lvl = 0.45
-        cr35 = ConstRecommender(score_const=lvl)
-        activity_filter = lambda x: x.title != "Act0"
+        cr35 = ConstRecommender(items_space=self.items, score_const=lvl)
+        item_filter = lambda x: x.title != "Act0"
 
-        recs = cr35.get_recommendations(item_filter=activity_filter)
+        recs = cr35.get_recommendations(item_filter=item_filter)
         rnd = lambda x: int(x * 100)
         self.assertTrue(all([rnd(r.score) == rnd(lvl) for r in recs]))
 

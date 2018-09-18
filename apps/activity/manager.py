@@ -1,7 +1,7 @@
 from apps.context.models import Student
 from apps.core.manager import AbstractRecommendationManager
 from apps.core.recommender import ConstRecommender
-from .models import ActivityRecommendationFresh, ActivityRecommendationLogs
+from .models import ActivityRecommendationFresh, ActivityRecommendationLogs, Activity
 from datetime import datetime
 import pytz
 
@@ -33,7 +33,7 @@ class ActivityRecommendationManager(AbstractRecommendationManager):
 
     def get_groups_config(self):
         return {
-            ConstRecommender(): Student.objects.all()
+            ConstRecommender(items_space=Activity.objects.all()): Student.objects.all()
         }
 
     def get_recommendations(self, created_after=None, user_uid=None):

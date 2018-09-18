@@ -209,7 +209,7 @@ class TeamRecommender:
         return target_ids[best_command_ids[1:]]
 
 
-class NetworkingRecommender:
+class SimilarityBasedNetworkingRecommender:
     def __init__(self, teammates_by_id: dict, interest_similarity: DataFrame, experience_similarity: DataFrame,
                  competence_similarity : DataFrame):
         self.interest_similarity = interest_similarity
