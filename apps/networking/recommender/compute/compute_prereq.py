@@ -143,9 +143,11 @@ def compute_similarities(students_desired, question_map=default_question_map):
         if len(list(current_student_profile)):
             current_student_profile = sorted(current_student_profile, key=lambda x:x.created)
             user_diagnostics[u] = current_student_profile[0].input
+        else:
+            user_diagnostics[u] = {}
     df = build_df(user_diagnostics, question_map)
-    validated_students = list(u for u in students_desired if u.uid in user_diagnostics.keys())
-    return validated_students, \
-           get_competence_similarity(df, question_map), \
+    #validated_students = list(u for u in students_desired if u.uid in user_diagnostics.keys())
+    # validated_students, \
+    return get_competence_similarity(df, question_map), \
            get_interests_similarity(df, question_map), \
            get_experience_similarity(df, question_map)

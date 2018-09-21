@@ -7,7 +7,7 @@ from apps.context.models import Activity
 from apps.core.models import AbstractRecommendation, MutableMixin, ImmutableMixin
 
 
-class ActivityRecommendationFresh(AbstractRecommendation, MutableMixin):
+class ActivityRecommendationFresh(MutableMixin, AbstractRecommendation):
     """
     Актуальные рекомендации активностей для юзера
     """
@@ -24,7 +24,7 @@ class ActivityRecommendationFresh(AbstractRecommendation, MutableMixin):
         return qs
 
 
-class ActivityRecommendationLogs(AbstractRecommendation, ImmutableMixin):
+class ActivityRecommendationLogs(ImmutableMixin, AbstractRecommendation):
     """
     Все сгенерированные активности для юзера
     """

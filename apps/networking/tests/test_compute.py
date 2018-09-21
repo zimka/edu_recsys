@@ -2,7 +2,7 @@ import json
 
 from django.test import TestCase
 
-from .compute.compute_prereq import build_df, _get_news, \
+from apps.networking.recommender.compute.compute_prereq import build_df, _get_news, \
     _get_hobby, get_interests_similarity, _get_project_directions, _get_education,\
     _get_language, get_experience_similarity, _get_base, _get_main_competence, get_competence_similarity, _get_environment
 

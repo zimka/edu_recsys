@@ -31,7 +31,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "rest_framework",
+    "coreapi",
+    "apps.context",
+    "apps.core",
+    'apps.interpreter',
+    "apps.activity",
+    'apps.networking'
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -106,8 +114,6 @@ DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S"
 
 STATIC_ROOT = '/var/www/edu_recsys/static/'
 STATIC_URL = '/static/'
-INSTALLED_APPS += ("rest_framework", "coreapi")
-INSTALLED_APPS += ("apps.context", "apps.core", "apps.activity", "apps.digital_profile", 'apps.interpreter', 'apps.networking')
 
 CONFIG = json.loads(open(os.path.join(BASE_DIR, 'config.json')).read())
 
@@ -130,13 +136,14 @@ LRS_BASE_URL = norm_url(CONFIG["LRS_BASE_URL"])
 LRS_AUTH_TOKEN = CONFIG["LRS_AUTH_TOKEN"]
 LRS_ARCHETYPES_GUID = CONFIG["LRS_ARCHETYPES_GUID"]
 
+# Блок ниже является временным костылем
+# и связан с текущей реализацией и API dp/ple
 DIAGNOSTICS_V0_GUID_TO_COMMON = CONFIG["DIAGNOSTICS_V0_GUID_TO_COMMON"]
 DIAGNOSTICS_V0_NORM = CONFIG["DIAGNOSTICS_V0_NORM"]
 _default_mu = dict((k,0) for k in DIAGNOSTICS_V0_NORM.keys())
 DIAGNOSTICS_V0_MU = CONFIG.get("DIAGNOSTICS_V0_MU", _default_mu)
 DIAGNOSTICS_V0_MOTIVALIS_UUIDS = CONFIG["DIAGNOSTICS_V0_MOTIVALIS_UUIDS"]
 DIAGNOSTICS_V0_ARCHETYPES_UUIDS = CONFIG["DIAGNOSTICS_V0_ARCHETYPES_UUIDS"]
-
 DIRECTION_UUIDS = CONFIG["DIRECTION_UUIDS"]
 NETWORKING_MIN_NUMBER_START = CONFIG.get('NETWORKING_MIN_NUMBER_START', 3)
 NETWORKING_QUESTION_MAP = CONFIG.get("NETWORKING_QUESTION_MAP", {})

@@ -3,6 +3,7 @@ from django.utils import timezone
 
 from apps.context.models import Student
 from apps.core.raw_recommendation import RawRecommendation
+from django.db import transaction
 
 
 class AbstractRecommendation(models.Model, RawRecommendation):
@@ -15,6 +16,8 @@ class AbstractRecommendation(models.Model, RawRecommendation):
     source = models.CharField(max_length=255)
 
     created = models.DateTimeField(default=timezone.now)
+
+    CLEAR_UPDATE_USERS = False
 
     class Meta:
         abstract = True
@@ -32,10 +35,10 @@ class AbstractRecommendation(models.Model, RawRecommendation):
 
 class ImmutableMixin:
     """
-    Примесь для изменяемых хранилищ
+    Примесь для неизменяемых хранилищ
     """
     @classmethod
-    def put_items(cls, recommendation_items, options=None):
+    def put_items(cls, recommendation_items, options={}):
         # TODO: bulk_create
         for r in recommendation_items:
             cls.create_from_raw(r, options)
@@ -43,18 +46,26 @@ class ImmutableMixin:
 
 class MutableMixin:
     """
-    Примесь для неизменяемых хранилищ
+    Примесь для изменяемых хранилищ
     """
     @classmethod
-    def put_items(cls, recommendation_items, options=None):
+    def put_items(cls, recommendation_items, options={}):
         """
         Метод работает линейно от количества итемов, но вызывается
         асинхронно, поэтому это нормально
         """
-        for r in recommendation_items:
-            data = r.to_kwargs()
-            if options is not None:
-                data.update(options)
-            updated = cls.objects.filter(user=r.user, item=r.item).update(**data)
-            if not updated:
-                cls.objects.create(**data)
+        with transaction.atomic():
+
+            if cls.CLEAR_UPDATE_USERS:
+                update_users = set()
+                for r in recommendation_items:
+                    update_users.add(r.user)
+                cls.objects.filter(user__in=update_users).delete()
+
+            for r in recommendation_items:
+                data = r.to_kwargs()
+                if options is not None:
+                    data.update(options)
+                updated = cls.objects.filter(user=r.user, item=r.item).update(**data)
+                if not updated:
+                    cls.objects.create(**data)

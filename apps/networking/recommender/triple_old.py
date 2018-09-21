@@ -15,7 +15,7 @@ class TripleNetworkingRecommender(BaseRecommender):
         all_students = Student.objects.all()
         if not users:
             users = all_students
-        target_users = filter(item_filter, all_students)
+        target_users = list(filter(item_filter, all_students))
         if not all([x in target_users for x in users]):
             # Иначе не будет рассчитана similarity
             raise ValueError("All users who get recommendations must be in item list")
@@ -24,9 +24,9 @@ class TripleNetworkingRecommender(BaseRecommender):
     def _get_recommendations(self, users, items):
         name = self.get_name()
 
-        staff_uids = [x.uid for x in Student.objects.filter(staff=True)]
+        staff_uids = [x.uid for x in Student.objects.filter(is_staff=True)]
 
-        validated_students, sim_competence, sim_experience, sim_interest = compute_similarities(items)
+        sim_competence, sim_experience, sim_interest = compute_similarities(items)
         backend_recommender = SimilarityBasedNetworkingRecommender(
             experience_similarity=sim_experience,
             competence_similarity=sim_competence,
@@ -36,8 +36,7 @@ class TripleNetworkingRecommender(BaseRecommender):
         int_recs = []
         exp_recs = []
         cmp_recs = []
-
-        for vst in validated_students:
+        for vst in users:
             current_list = staff_uids.copy()
             int_id, int_score = backend_recommender.recommend_man(vst.uid, current_list, 'interests')
             current_list.append(int_id)
@@ -45,9 +44,9 @@ class TripleNetworkingRecommender(BaseRecommender):
             current_list.append(exp_id)
             cmp_id, cmp_score = backend_recommender.recommend_man(vst.uid, current_list, 'competences')
 
-            int_user = next(filter(lambda x: x.uid==int_id, users))
-            exp_user = next(filter(lambda x: x.uid==exp_id, users))
-            cmp_user = next(filter(lambda x: x.uid==cmp_id, users))
+            int_user = next(filter(lambda x: x.uid==int_id, items))
+            exp_user = next(filter(lambda x: x.uid==exp_id, items))
+            cmp_user = next(filter(lambda x: x.uid==cmp_id, items))
             if int_user:
                 int_recs.append(RawRecommendation.from_kwargs(user=vst, item=int_user, score=int_score, source=name))
             if exp_user:

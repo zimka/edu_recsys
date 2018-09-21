@@ -2,7 +2,7 @@ SCORE_LIMITS = (0, 1)
 
 
 def in_score_limits(score):
-    return SCORE_LIMITS[0] < score < SCORE_LIMITS[1]
+    return SCORE_LIMITS[0] <= score <= SCORE_LIMITS[1]
 
 
 class RawRecommendation:
