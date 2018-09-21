@@ -1,12 +1,14 @@
 import logging
+
 from celery import shared_task, chain
-from apps.networking.tasks import create_networking_recommendations
+
+from apps.networking.tasks import update_networking_recommendations
 
 log = logging.getLogger(__name__)
 
 
 def run_update(uuid):
-    chain(compute_single_score_async.s(uuid), create_networking_recommendations.si())()
+    chain(compute_single_score_async.s(uuid), update_networking_recommendations().si())()
 
 @shared_task
 def compute_single_score_async(uuid):

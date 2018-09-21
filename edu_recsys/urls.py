@@ -1,15 +1,15 @@
+from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
-from django.conf import settings
-from rest_framework.documentation import include_docs_urls
 from django.views.generic import RedirectView
+from rest_framework.documentation import include_docs_urls
 
 apiurlpatterns = [
-#    path('activity/', include("apps.activity.urls")),
-    path('inter/', include('apps.interpreter.urls')),
-    path('docs/', include_docs_urls(title='API Documentaion')),
+    path('', include("apps.activity.urls")),
+    path('', include('apps.interpreter.urls')),
     path('', include('apps.networking.urls')),
-    #    path('dp/', include('apps.digital_profile.urls'))
+    path('docs/', include_docs_urls(title='API Documentaion')),
+
 ]
 urlpatterns = [
     path('admin/', admin.site.urls),

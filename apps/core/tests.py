@@ -5,8 +5,8 @@ from django.test import TestCase
 
 from apps.context.models import Student
 from apps.core.recommender import ConstRecommender
-from .raw_recommendation import RawRecommendation
 from .api_utils import RecommendationSerializer
+from .raw_recommendation import RawRecommendation
 
 SomeItem = namedtuple("SomeItem", ["id", "title"])
 

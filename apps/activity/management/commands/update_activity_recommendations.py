@@ -1,6 +1,8 @@
 import logging
+
 from django.core.management.base import BaseCommand
-from apps.activity.manager import ActivityRecommendationManager
+
+from apps.activity.tasks import update_activity_recommendations
 
 
 class Command(BaseCommand):
@@ -10,4 +12,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         logging.info("Activity Recommendations run_update_async called")
-        ActivityRecommendationManager().run_update_async()
+        update_activity_recommendations()

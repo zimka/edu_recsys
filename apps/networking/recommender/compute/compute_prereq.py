@@ -1,11 +1,12 @@
 import numpy as np
-import scipy as sp
 import pandas as pd
-from .old import pairwise, jaccard_similarity, text_series_to_vecs, get_word_vecs, get_word_weights, \
-    aggregate_similarity_matrices, prepare_environment_data, prepare_competence_with_income_data, text_to_vec, minimum_cosine_distance
-
-
+import scipy as sp
 from django.conf import settings
+
+from .old import pairwise, jaccard_similarity, text_series_to_vecs, get_word_vecs, get_word_weights, \
+    aggregate_similarity_matrices, prepare_environment_data, prepare_competence_with_income_data, text_to_vec, \
+    minimum_cosine_distance
+
 default_question_map = getattr(settings, "NETWORKING_QUESTION_MAP")
 
 word_vecs = get_word_vecs()

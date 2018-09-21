@@ -1,13 +1,16 @@
+import logging
 import random
 from abc import ABC, abstractmethod
 
 from .raw_recommendation import RawRecommendation, in_score_limits
 
 
+log = logging.getLogger(__name__)
+
+
 def get_all_users():
     from apps.context.models import Student
     return Student.objects.all()
-
 
 
 class AbstractRecommender(ABC):
@@ -37,7 +40,12 @@ class BaseRecommender(AbstractRecommender):
         if not users:
             users = get_all_users()
         items = list(filter(item_filter, self.items_space))
-        return self._get_recommendations(users, items)
+        try:
+            recs = self._get_recommendations(users, items)
+        except Exception as e:
+            log.error("Exception during recommender execution: {}".format(e))
+            recs = []
+        return recs
 
 
 class DumbRecommender(BaseRecommender):

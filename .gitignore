@@ -1,4 +1,4 @@
 .idea/
 *.pyc
 config.json
-apps/networking/compute/old/w2v_extended.pickle
+apps/networking/recommender/compute/old/w2v_extended.pickle

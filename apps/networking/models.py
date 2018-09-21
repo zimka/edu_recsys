@@ -1,24 +1,24 @@
+"""
+Рекоммендации пользователю по нетворкингу.
+На данный момент даются одновременно рекоммендации
+по трем направлениям: интересам, опыту и компетенциям.
+"""
 from django.db import models
+
 from apps.context.models import Student
-from apps.core.models import AbstractRecommendation, MutableMixin
+from apps.core.models import AbstractRecommendation
 
 
-class NetworkingRecommendation(MutableMixin, AbstractRecommendation):
-
-    class Meta:
-        abstract = True
-
-
-class CompetenceNetworkingRecommendation(NetworkingRecommendation):
+class CompetenceNetworkingRecommendation(AbstractRecommendation):
     CLEAR_UPDATE_USERS = True
     item = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="recommended_user_cmp")
 
 
-class InterestNetworkingRecommendation(NetworkingRecommendation):
+class InterestNetworkingRecommendation(AbstractRecommendation):
     CLEAR_UPDATE_USERS = True
     item = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="recommended_user_int")
 
 
-class ExperienceNetworkingRecommendation(NetworkingRecommendation):
+class ExperienceNetworkingRecommendation(AbstractRecommendation):
     CLEAR_UPDATE_USERS = True
     item = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="recommended_user_exp")

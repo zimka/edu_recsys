@@ -1,18 +1,21 @@
 import logging
 from uuid import uuid4, UUID
+
 from django.db import models
 from jsonfield import JSONField
 from model_utils.fields import AutoCreatedField
-from apps.context.models import Student
-from .tasks import run_update
-from .clients import DpApiClient, LrsApiClient, PleApiClient
 
+from apps.context.models import Student
+from apps.context.clients import DpApiClient, LrsApiClient, PleApiClient
+from .tasks import run_update
 
 log = logging.getLogger(__name__)
 
 
 class ComputeTask(models.Model):
-    # TODO: change db to postgres and use native json. JSONFields
+    """
+    Задача на расчет чего-либо
+    """
     input = JSONField(default={})
     output = JSONField(default={})
     complete = models.BooleanField(default=False)
@@ -26,6 +29,10 @@ class ComputeTask(models.Model):
 
 
 class SingleScoreComputeTask(ComputeTask):
+    """
+    Задача на расчет интерпретатором v0 цифрового профиля
+    юзера. Input собирается из систем контура
+    """
     uuid = models.UUIDField(default=uuid4, primary_key=True)
     user = models.ForeignKey(Student, on_delete=models.PROTECT)
 
@@ -77,7 +84,8 @@ class SingleScoreComputeTask(ComputeTask):
 
 class PleQuestionIdUuidMap(models.Model):
     """
-    100% костыль
+    100% костыль, необходимый для перевода uuid-ов вопросов
+    в PLE в id, отражаемый пользователям
     """
     uuid = models.UUIDField()
     ple_id = models.IntegerField()

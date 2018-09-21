@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
-from apps.networking.tasks import create_networking_recommendations
+
+from apps.networking.tasks import update_networking_recommendations
 
 
 class Command(BaseCommand):
@@ -11,4 +12,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for_new_only = options.get('for_new_only', True)
-        create_networking_recommendations.delay(for_new_only)
+        update_networking_recommendations(for_new_only=for_new_only)

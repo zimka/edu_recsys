@@ -7,11 +7,11 @@ def in_score_limits(score):
 
 class RawRecommendation:
     """
-    "Сырая" рекомендация, которую можно положить в хранилище/сериализовать
+    "Сырая" рекомендация, которую можно положить в хранилище/сериализовать.
+    Любая даваемая рекомендация должна быть представимы в "сыром" виде.
     """
     _SLOTS = ["user", "item", "score", "source", "created"]
     _OPTIONAL_SLOTS = ["created"]
-    __slots__ = _SLOTS
 
     @classmethod
     def from_kwargs(cls, *, user, item, score, source, created=None):

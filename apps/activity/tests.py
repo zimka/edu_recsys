@@ -1,14 +1,14 @@
 import random
+
 from django.db.utils import IntegrityError
 
 from apps.context.models import Student, Activity
-from apps.core.recommender import ConstRecommender
 from apps.core.raw_recommendation import RawRecommendation
+from apps.core.recommender import ConstRecommender
 from apps.core.tests import TestCase, create_test_user
-
-from .manager import ActivityRecommendationManager
-from .models import ActivityRecommendationFresh, ActivityRecommendationLogs
 from .api_utils import ActivityRecommendationSerializer
+from .models import ActivityRecommendation
+from .updater import ActivityRecommendationUpdater
 
 
 def get_test_config(lvl=0.42, items_space=None):
@@ -39,34 +39,34 @@ class ActivityTestCase(TestCase):
 class ActivityRecommenderManagerTestCase(ActivityTestCase):
     def test_manager_update(self):
         lvl = 0.45
-        man = ActivityRecommendationManager(forced_config=get_test_config(lvl))
+        man = ActivityRecommendationUpdater(recommender_users_config=get_test_config(lvl))
         man.do_update()
-        recs = ActivityRecommendationFresh.objects.all()
+        recs = ActivityRecommendation.objects.all()
         self.assertTrue(len(recs) == self.N_USERS * self.N_ACTS)
 
-        recs = ActivityRecommendationLogs.objects.all()
+        recs = ActivityRecommendation.history.all()
         self.assertTrue(len(recs) == self.N_USERS * self.N_ACTS)
 
     def test_manager_single_update(self):
         lvl = 0.5
-        man = ActivityRecommendationManager(forced_config=get_test_config(lvl))
+        man = ActivityRecommendationUpdater(recommender_users_config=get_test_config(lvl))
         u = Student.objects.first()
-        self.assertFalse(len(ActivityRecommendationLogs.objects.all()))
+        self.assertFalse(len(ActivityRecommendation.history.all()))
         man.do_single_update(u)
-        self.assertTrue(len(ActivityRecommendationLogs.objects.all())==self.N_ACTS)
-        generated_users = set(x.user for x in ActivityRecommendationLogs.objects.all())
+        self.assertTrue(len(ActivityRecommendation.history.all()) == self.N_ACTS)
+        generated_users = set(x.user for x in ActivityRecommendation.history.all())
         self.assertTrue(len(generated_users) == 1)
         self.assertTrue(list(generated_users)[0] == u)
 
     def test_update_changes_fresh_created(self):
         lvl = 0.3
-        man = ActivityRecommendationManager(forced_config=get_test_config(lvl))
+        man = ActivityRecommendationUpdater(recommender_users_config=get_test_config(lvl))
 
         man.do_update()
-        recs = ActivityRecommendationFresh.objects.all()
+        recs = ActivityRecommendation.objects.all()
         highest_date = max([x.created for x in recs])
         man.do_update()
-        recs = ActivityRecommendationFresh.objects.all()
+        recs = ActivityRecommendation.objects.all()
         self.assertTrue(all([x.created > highest_date for x in recs]))
 
 
@@ -76,18 +76,41 @@ class ActivityRecommendationTestCase(ActivityTestCase):
         self.lvl = 0.3
         self.lvl2 = 0.5
 
-        man = ActivityRecommendationManager(forced_config=get_test_config(self.lvl))
+        man = ActivityRecommendationUpdater(recommender_users_config=get_test_config(self.lvl))
         man.do_update()
 
-        man = ActivityRecommendationManager(forced_config=get_test_config(self.lvl2))
+        man = ActivityRecommendationUpdater(recommender_users_config=get_test_config(self.lvl2))
         man.do_update()
+
+    def test_single_override(self):
+        res = ActivityRecommendation.objects.first()
+        new_score = 0.99
+        res.score = new_score
+        res.save()
+        res = ActivityRecommendation.objects.get(user=res.user, item=res.item)
+        self.assertTrue(res.score == new_score)
 
     def test_creation_from_recommendation(self):
         u = Student.objects.first()
         a = Activity.objects.first()
 
         raw = RawRecommendation.from_kwargs(user=u, item=a, score=0.42, source="test")
-        res = ActivityRecommendationLogs.create_from_raw(raw)
+        ActivityRecommendation.put_single(raw)
+
+        res = ActivityRecommendation.objects.get(user=u, item=a)
+
+        self.assertTrue(res.user == raw.user)
+        self.assertTrue(res.item == raw.item)
+        self.assertTrue(res.score == raw.score)
+        self.assertTrue(res.created is not None)
+
+    def test_override_from_put_items(self):
+        u = Student.objects.first()
+        a = Activity.objects.first()
+
+        raw = RawRecommendation.from_kwargs(user=u, item=a, score=0.42, source="test")
+        ActivityRecommendation.put_many([raw])
+        res = ActivityRecommendation.objects.get(user=u, item=a)
 
         self.assertTrue(res.user == raw.user)
         self.assertTrue(res.item == raw.item)
@@ -98,16 +121,16 @@ class ActivityRecommendationTestCase(ActivityTestCase):
         a = Activity.objects.first()
         raw = RawRecommendation.from_kwargs(user=None, item=a, score=0.42, source="test")
         with self.assertRaises(IntegrityError) as cm:
-            ActivityRecommendationLogs.create_from_raw(raw)
+            ActivityRecommendation.put_single(raw)
 
     def test_constrains_violation_item(self):
         u = Student.objects.first()
         raw = RawRecommendation.from_kwargs(user=u, item=None, score=0.42, source="test")
         with self.assertRaises(IntegrityError) as cm:
-            ActivityRecommendationLogs.create_from_raw(raw)
+            ActivityRecommendation.put_single(raw)
 
     def test_get_fresh_all(self):
-        recs = ActivityRecommendationFresh.objects.all()
+        recs = ActivityRecommendation.objects.all()
         self.assertTrue(len(recs) == self.N_USERS * self.N_ACTS)
         self.assertTrue(all([x.score == self.lvl2 for x in recs]))
 
@@ -118,13 +141,13 @@ class ActivityRecommendationTestCase(ActivityTestCase):
         self.assertTrue(len(items) == self.N_ACTS)
 
     def test_get_logs_all(self):
-        recs = ActivityRecommendationLogs.objects.all()
+        recs = ActivityRecommendation.history.all()
         self.assertTrue(len(recs) == 2 * self.N_USERS * self.N_ACTS)
 
     def test_serialization(self):
-        single = ActivityRecommendationFresh.objects.first()
+        single = ActivityRecommendation.objects.first()
         serial = ActivityRecommendationSerializer(single)
-        many = ActivityRecommendationFresh.objects.all()
+        many = ActivityRecommendation.objects.all()
         serial = ActivityRecommendationSerializer(many, many=True)
         self.assertTrue(len(serial.data) == len(many))
 

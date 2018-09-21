@@ -1,9 +1,11 @@
 import logging
-import requests
-from django.conf import settings
-from .models import Activity
-from celery import shared_task
+from datetime import datetime
 
+import requests
+from celery import shared_task
+from django.conf import settings
+
+from .models import Activity
 
 log = logging.getLogger(__name__)
 
@@ -13,7 +15,6 @@ def _handle_activity_data(data):
     uuid = data["uuid"]
 
     act, created = Activity.objects.get_or_create(uuid=uuid)
-    print(title, uuid)
     if act.title != title:
         act.title = title
         act.save()
@@ -21,6 +22,8 @@ def _handle_activity_data(data):
 
 @shared_task
 def load_activities(limit=None):
+    start_time = datetime.now()
+    log.info("Started Activity loading from LABS :{}".format(str(start_time)))
     base_url = settings.LABS_BASE_URL
     uri = "/api/v1/activity"
     app_token = settings.LABS_APP_TOKEN
@@ -49,3 +52,4 @@ def load_activities(limit=None):
             ))
         if limit and num>=limit:
             break
+    log.info("Successfully finished Activity loading, took {}".format(str(datetime.now() - start_time)))

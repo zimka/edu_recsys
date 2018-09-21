@@ -1,9 +1,18 @@
-from django.conf import settings
+"""
+В v0 находится интерпретатор, использовавшийся на ВЭФ(09.2018), рассчитывающий балл
+пользователя по направлениям на основе диагностических тестов.
+https://wiki.2035.university/pages/viewpage.action?pageId=1179912
+"""
+
+from functools import partial
+
 import numpy as np
 import pandas as pd
-from apps.interpreter.models import PleQuestionIdUuidMap
+from django.conf import settings
+
 from apps.context.models import Directions
-from functools import partial
+from apps.interpreter.models import PleQuestionIdUuidMap
+
 
 def equals_approx(value, prec, eps=0.05):
     try:

@@ -35,9 +35,12 @@ INSTALLED_APPS = [
     "coreapi",
     "apps.context",
     "apps.core",
-    'apps.interpreter',
     "apps.activity",
     'apps.networking'
+]
+# TODO: separate interpreter
+INSTALLED_APPS += [
+    'apps.interpreter',
 ]
 
 
@@ -157,6 +160,7 @@ SECRET_KEY = CONFIG.get("SECRET_KEY", 'SECRET_KEY')
 DATABASES = {
     'default': CONFIG["DATABASE"],
 }
+SIMPLE_HISTORY_HISTORY_ID_USE_UUID = True
 
 BROKER_URL = CONFIG["BROKER_URL"]
 

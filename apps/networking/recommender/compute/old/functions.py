@@ -1,18 +1,13 @@
-import numpy as np
-import scipy as sp
-
-from pandas import DataFrame
-
-from typing import List
-
-from functools import partial
 import re
+from functools import partial
 from typing import List
 
 import numpy as np
-from scipy import spatial
-from pandas import DataFrame, Series
 import pymorphy2
+import scipy as sp
+from pandas import DataFrame, Series
+from scipy import spatial
+
 from .text_processing import parse_competences
 
 

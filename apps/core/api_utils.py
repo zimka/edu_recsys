@@ -1,7 +1,7 @@
 import logging
+
 from django.conf import settings
 from rest_framework import serializers, permissions
-
 
 log = logging.getLogger(__name__)
 

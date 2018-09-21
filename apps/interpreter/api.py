@@ -1,15 +1,10 @@
-import coreapi, coreschema
-from rest_framework.schemas import AutoSchema
-
 import logging
 
-
-from rest_framework.schemas import AutoSchema
 from rest_framework import mixins
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.schemas import AutoSchema
+from rest_framework.viewsets import GenericViewSet
 
 from apps.core.api_utils import ApiKeyPermission
-
 from .models import SingleScoreComputeTask
 from .serializer import SingleScoreComputeTaskSerializer
 

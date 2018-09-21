@@ -1,11 +1,10 @@
-import numpy as np
-import scipy as sp
-import pandas as pd
-import pymorphy2
 import re
 
-from pandas import DataFrame, Series
+import numpy as np
+import pymorphy2
+import scipy as sp
 from Levenshtein import distance
+from pandas import Series
 
 
 def parse_word2vec(path):

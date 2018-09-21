@@ -1,19 +1,14 @@
-from rest_framework import serializers
-from apps.context.models import Student
-from .models import SingleScoreComputeTask
 import json
 
+from rest_framework import serializers
 
-class NestedStudentSerializer(serializers.ModelSerializer):
-    uid = serializers.IntegerField()
-
-    class Meta:
-        model = Student
-        exclude = ("id", "leader_id", "is_removed")
+from apps.context.api_utils import StudentSerializer
+from apps.context.models import Student
+from .models import SingleScoreComputeTask
 
 
 class SingleScoreComputeTaskSerializer(serializers.ModelSerializer):
-    user = NestedStudentSerializer(read_only=False)
+    user = StudentSerializer(read_only=False)
 
     class Meta:
         model = SingleScoreComputeTask

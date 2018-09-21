@@ -1,11 +1,11 @@
 from django.shortcuts import get_object_or_404
-from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.generics import RetrieveAPIView
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from apps.core.api_utils import ApiKeyPermission
+from .api_utils import NetworkingRecommendationSerializer, CombinedNetworkingRecommendationSerializer
 from .models import CompetenceNetworkingRecommendation, InterestNetworkingRecommendation, \
     ExperienceNetworkingRecommendation
-from .api_utils import NetworkingRecommendationSerializer, CombinedNetworkingRecommendationSerializer
 
 
 class BaseNetworkRecommendationViewset(ReadOnlyModelViewSet):

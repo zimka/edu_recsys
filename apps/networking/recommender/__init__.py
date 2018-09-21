@@ -1,1 +1,1 @@
-from .triple_old import TripleNetworkingRecommender
+from .triple import TripleNetworkingRecommender

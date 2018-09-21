@@ -1,9 +1,10 @@
 from django.test import TestCase
+
+from apps.context.models import Student
 from apps.core.tests import create_test_user
-from apps.networking.recommender import TripleNetworkingRecommender
 from apps.networking.models import InterestNetworkingRecommendation, \
     CompetenceNetworkingRecommendation, ExperienceNetworkingRecommendation
-from apps.context.models import Student
+from apps.networking.recommender import TripleNetworkingRecommender
 
 
 class ModelTest(TestCase):
@@ -17,9 +18,9 @@ class ModelTest(TestCase):
         users = Student.objects.all()
         recom = TripleNetworkingRecommender(items_space=users)
         cmp_recs, exp_recs, int_recs = recom.get_recommendations()
-        CompetenceNetworkingRecommendation.put_items(cmp_recs)
-        ExperienceNetworkingRecommendation.put_items(exp_recs)
-        InterestNetworkingRecommendation.put_items(int_recs)
+        CompetenceNetworkingRecommendation.put_many(cmp_recs)
+        ExperienceNetworkingRecommendation.put_many(exp_recs)
+        InterestNetworkingRecommendation.put_many(int_recs)
         self.assertTrue(CompetenceNetworkingRecommendation.objects.count() == self.N_USERS)
         self.assertTrue(InterestNetworkingRecommendation.objects.count() == self.N_USERS)
         self.assertTrue(ExperienceNetworkingRecommendation.objects.count() == self.N_USERS)
@@ -28,9 +29,9 @@ class ModelTest(TestCase):
         users = Student.objects.all()
         recom = TripleNetworkingRecommender(items_space=users)
         cmp_recs, exp_recs, int_recs = recom.get_recommendations()
-        CompetenceNetworkingRecommendation.put_items(cmp_recs)
-        InterestNetworkingRecommendation.put_items(int_recs)
-        ExperienceNetworkingRecommendation.put_items(exp_recs)
+        CompetenceNetworkingRecommendation.put_many(cmp_recs)
+        InterestNetworkingRecommendation.put_many(int_recs)
+        ExperienceNetworkingRecommendation.put_many(exp_recs)
 
         staff_users = cmp_recs[0].user, cmp_recs[0].item
         for s in staff_users:
@@ -38,9 +39,9 @@ class ModelTest(TestCase):
             s.save()
 
         cmp_recs, exp_recs, int_recs = recom.get_recommendations()
-        CompetenceNetworkingRecommendation.put_items(cmp_recs)
-        InterestNetworkingRecommendation.put_items(int_recs)
-        ExperienceNetworkingRecommendation.put_items(exp_recs)
+        CompetenceNetworkingRecommendation.put_many(cmp_recs)
+        InterestNetworkingRecommendation.put_many(int_recs)
+        ExperienceNetworkingRecommendation.put_many(exp_recs)
 
         self.assertTrue(CompetenceNetworkingRecommendation.objects.count() == self.N_USERS)
         self.assertTrue(InterestNetworkingRecommendation.objects.count() == self.N_USERS)

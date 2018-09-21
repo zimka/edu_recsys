@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
-from .api import InterestNetworkingRecommendationViewset, CompetenceNetworkingRecommendationViewset,\
+
+from .api import InterestNetworkingRecommendationViewset, CompetenceNetworkingRecommendationViewset, \
     ExperienceNetworkingRecommendationViewset, CombinedNetworkingRecommendationView
 
 router = routers.SimpleRouter()
@@ -13,6 +14,6 @@ app_name = 'networking'
 
 
 urlpatterns = [
-    path("networking/{user__uid}/", CombinedNetworkingRecommendationView.as_view()),
+    path("networking/<int:user__uid>/", CombinedNetworkingRecommendationView.as_view()),
     path("networking/", include(router.urls))
 ]

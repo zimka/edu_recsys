@@ -1,7 +1,9 @@
 import bz2
 import io
-import pandas as pd
 import os
+
+import pandas as pd
+
 
 def get_word_vecs():
     try:

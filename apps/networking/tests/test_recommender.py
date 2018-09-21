@@ -1,6 +1,7 @@
 from django.test import TestCase
-from apps.core.tests import create_test_user
+
 from apps.context.models import Student
+from apps.core.tests import create_test_user
 from apps.networking.recommender import TripleNetworkingRecommender
 
 

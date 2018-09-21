@@ -1,7 +1,7 @@
 import uuid
 
-from django.db import models
 from django.conf import settings
+from django.db import models
 from model_utils.models import SoftDeletableModel
 
 direction_uuids = settings.DIRECTION_UUIDS
@@ -19,19 +19,9 @@ class Directions:
     KEYS = (DATA_ANALYST, BUSINESS_ARCHITECT, ORGANIZER, ENTREPRENEUR, COMMUNITY_LEADER, TECHNOLOGIST)
 
 
-class LoadableDumb:
-    def load(self):
-        pass
-
-    @classmethod
-    def load_bulk(cls):
-        pass
-
-
-class Activity(SoftDeletableModel, LoadableDumb):
+class Activity(SoftDeletableModel):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     title = models.CharField(max_length=255)
-    #TODO: ForeignKey IsleContext
 
     def __str__(self):
         return self.title
@@ -40,7 +30,7 @@ class Activity(SoftDeletableModel, LoadableDumb):
         return self.uuid
 
 
-class Student(SoftDeletableModel, LoadableDumb):
+class Student(SoftDeletableModel):
     uid = models.IntegerField(editable=False, unique=True)
     leader_id = models.IntegerField(unique=True, null=True)
     is_staff = models.BooleanField(default=False)
@@ -64,12 +54,8 @@ class Student(SoftDeletableModel, LoadableDumb):
     def get_uid(self):
         return self.uid
 
-    @property
-    def is_complete(self):
-        return self.digital_profile is not None
 
-
-class IsleContext(SoftDeletableModel, LoadableDumb):
+class IsleContext(SoftDeletableModel):
     name = models.CharField(max_length=255)
 
     @classmethod
