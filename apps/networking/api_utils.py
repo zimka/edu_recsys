@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.context.api_utils import StudentSerializer
+from edu_coresys.api_utils import StudentSerializer
 from apps.core.api_utils import RecommendationSerializer
 
 

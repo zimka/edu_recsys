@@ -1,4 +1,4 @@
-from apps.context.models import Student
+from edu_coresys.models import Student
 from apps.core.recommender import ConstRecommender
 from .models import ActivityRecommendation, Activity
 

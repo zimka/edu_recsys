@@ -2,8 +2,8 @@ import json
 
 from rest_framework import serializers
 
-from apps.context.api_utils import StudentSerializer
-from apps.context.models import Student
+from edu_coresys.api_utils import StudentSerializer
+from edu_coresys.models import Student
 from .models import SingleScoreComputeTask
 
 

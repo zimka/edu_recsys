@@ -3,7 +3,7 @@ from datetime import datetime
 import pytz
 from django.db import models
 
-from apps.context.models import Activity
+from edu_coresys.models import Activity
 from apps.core.models import AbstractRecommendation
 
 

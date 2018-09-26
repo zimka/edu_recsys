@@ -5,8 +5,8 @@ from django.db import models
 from jsonfield import JSONField
 from model_utils.fields import AutoCreatedField
 
-from apps.context.models import Student
-from apps.context.clients import DpApiClient, LrsApiClient, PleApiClient
+from edu_coresys.models import Student
+from edu_coresys.clients import DpApiClient, LrsApiClient, PleApiClient
 from .tasks import run_update
 
 log = logging.getLogger(__name__)

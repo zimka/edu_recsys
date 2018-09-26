@@ -5,7 +5,7 @@
 """
 from django.db import models
 
-from apps.context.models import Student
+from edu_coresys.models import Student
 from apps.core.models import AbstractRecommendation
 
 

@@ -3,7 +3,7 @@ from django.db import transaction
 from django.utils import timezone
 from simple_history.models import HistoricalRecords
 
-from apps.context.models import Student
+from edu_coresys.models import Student
 from apps.core.raw_recommendation import RawRecommendation
 
 

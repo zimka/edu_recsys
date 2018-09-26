@@ -1,4 +1,4 @@
-from apps.context.models import Student
+from edu_coresys.models import Student
 from .models import InterestNetworkingRecommendation, \
     ExperienceNetworkingRecommendation, CompetenceNetworkingRecommendation
 from .recommender import TripleNetworkingRecommender

@@ -2,7 +2,7 @@ import random
 
 from django.db.utils import IntegrityError
 
-from apps.context.models import Student, Activity
+from edu_coresys.models import Student, Activity
 from apps.core.raw_recommendation import RawRecommendation
 from apps.core.recommender import ConstRecommender
 from apps.core.tests import TestCase, create_test_user

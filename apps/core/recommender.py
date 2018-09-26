@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 
 def get_all_users():
-    from apps.context.models import Student
+    from edu_coresys.models import Student
     return Student.objects.all()
 
 

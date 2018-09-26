@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from django.conf import settings
 
-from apps.context.models import Directions
+from edu_coresys.models import Directions
 from apps.interpreter.models import PleQuestionIdUuidMap
 
 

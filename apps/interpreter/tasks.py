@@ -8,7 +8,8 @@ log = logging.getLogger(__name__)
 
 
 def run_update(uuid):
-    chain(compute_single_score_async.s(uuid), update_networking_recommendations().si())()
+    pass
+    #chain(compute_single_score_async.s(uuid), update_networking_recommendations().si())()
 
 @shared_task
 def compute_single_score_async(uuid):
