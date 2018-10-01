@@ -38,10 +38,6 @@ INSTALLED_APPS = [
     "apps.activity",
     'apps.networking'
 ]
-# TODO: separate interpreter
-INSTALLED_APPS += [
-    'apps.interpreter',
-]
 
 
 MIDDLEWARE = [

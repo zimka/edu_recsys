@@ -134,16 +134,16 @@ def get_competence_similarity(user_diagnostics_df, question_map=default_question
 
 
 def compute_similarities(students_desired, question_map=default_question_map):
-    from apps.interpreter.models import SingleScoreComputeTask
+    from apps.networking.models import NetworkingInfoStorage
 
     uids = [u.uid for u in students_desired]
-    students_profiles = SingleScoreComputeTask.objects.filter(complete=True, user__uid__in=uids)
+    students_profiles = NetworkingInfoStorage.objects.filter(user__uid__in=uids)
     user_diagnostics = {}
     for u in uids:
         current_student_profile = list(filter(lambda x: x.user.uid==u, students_profiles))
         if len(list(current_student_profile)):
-            current_student_profile = sorted(current_student_profile, key=lambda x:x.created)
-            user_diagnostics[u] = current_student_profile[0].input
+            current_student_profile = sorted(current_student_profile, key=lambda x:x.updated)
+            user_diagnostics[u] = current_student_profile[0].info
         else:
             user_diagnostics[u] = {}
     df = build_df(user_diagnostics, question_map)
