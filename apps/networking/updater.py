@@ -1,18 +1,18 @@
 from edu_coresys.models import Student
+from apps.core.updater import RecommendationUpdater
 from .models import InterestNetworkingRecommendation, \
     ExperienceNetworkingRecommendation, CompetenceNetworkingRecommendation
 from .recommender import TripleNetworkingRecommender
 
 
-class NetworkingRecommendationUpdater():
+class NetworkingRecommendationUpdater(RecommendationUpdater):
     """
     Обновляет рекомендации нетворкинга
     """
     def __init__(self, recommender_users_config=None, for_new_only=False):
-        super().__init__()
-        self.recommender_users_config = recommender_users_config or {
+        super().__init__( recommender_users_config or {
             TripleNetworkingRecommender(items_space=Student.objects.all()): Student.objects.all()
-        }
+        })
         self.for_new_only = for_new_only
 
     def do_update(self, item_filter=lambda x: True):
@@ -23,7 +23,7 @@ class NetworkingRecommendationUpdater():
         return self._do_update(single_user_filter, item_filter)
 
     def _do_update(self, users_filter=lambda x: True, item_filter=lambda x: True):
-        config = self.recommender_users_config
+        config = self.config
         if self.for_new_only:
             users_with_recs = set(x.uid for x in CompetenceNetworkingRecommendation.objects.all())
             updated_users_filter = lambda x: users_filter(x) and x.uid not in users_with_recs
