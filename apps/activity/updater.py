@@ -1,6 +1,6 @@
-from edu_coresys.models import Student
-from apps.core.recommender import ConstRecommender
-from apps.core.updater import RecommendationUpdater
+from edu_common.models import Student
+from recsys_base.recommender import ConstRecommender
+from recsys_base.updater import RecommendationUpdater
 from .models import ActivityRecommendation, Activity
 
 

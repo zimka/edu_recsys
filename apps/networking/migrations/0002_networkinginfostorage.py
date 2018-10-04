@@ -11,7 +11,7 @@ import model_utils.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('edu_coresys', '0001_initial'),
+        ('edu_common', '0001_initial'),
         ('networking', '0001_initial'),
     ]
 
@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('info', jsonfield.fields.JSONField(default={}, dump_kwargs={'cls': jsonfield.encoder.JSONEncoder, 'separators': (',', ':')}, load_kwargs={})),
                 ('updated', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='edu_coresys.Student')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='edu_common.Student')),
             ],
         ),
     ]

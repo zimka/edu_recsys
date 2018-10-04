@@ -1,5 +1,5 @@
-from edu_coresys.models import Student
-from apps.core.recommender import BaseRecommender, RawRecommendation
+from edu_common.models import Student
+from recsys_base.recommender import BaseRecommender, RawRecommendation
 from .compute import SimilarityBasedNetworkingRecommender
 from .compute.compute_prereq import compute_similarities
 

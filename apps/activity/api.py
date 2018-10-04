@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from apps.core.api_utils import ApiKeyPermission
+from recsys_base.api_utils import ApiKeyPermission
 from .api_utils import ActivityRecommendationSerializer
 from .models import ActivityRecommendation
 

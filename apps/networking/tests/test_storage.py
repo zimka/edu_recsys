@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from edu_coresys.models import Student
-from apps.core.tests import create_test_user
+from edu_common.models import Student
+from recsys_base.tests import create_test_user
 from apps.networking.models import InterestNetworkingRecommendation, \
     CompetenceNetworkingRecommendation, ExperienceNetworkingRecommendation
 from apps.networking.recommender import TripleNetworkingRecommender

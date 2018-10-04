@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from edu_coresys.api_utils import StudentSerializer
-from apps.core.api_utils import RecommendationSerializer
+from edu_common.api_utils import StudentSerializer
+from recsys_base.api_utils import RecommendationSerializer
 
 
 class NetworkingRecommendationSerializer(RecommendationSerializer):

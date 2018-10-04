@@ -5,9 +5,9 @@
 """
 from django.db import models
 
-from edu_coresys.models import Student
-from edu_coresys.clients import PleApiClient
-from apps.core.models import AbstractRecommendation
+from edu_common.models import Student
+from edu_common.clients import PleApiClient
+from recsys_base.models import AbstractRecommendation
 
 from jsonfield import JSONField
 from model_utils.fields import AutoLastModifiedField

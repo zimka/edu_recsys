@@ -33,8 +33,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "rest_framework",
     "coreapi",
-    "edu_coresys",
-    "apps.core",
+    "edu_common",
+    "recsys_base",
     "apps.activity",
     'apps.networking'
 ]

@@ -1,5 +1,5 @@
-from edu_coresys.models import Student
-from apps.core.updater import RecommendationUpdater
+from edu_common.models import Student
+from recsys_base.updater import RecommendationUpdater
 from .models import InterestNetworkingRecommendation, \
     ExperienceNetworkingRecommendation, CompetenceNetworkingRecommendation
 from .recommender import TripleNetworkingRecommender

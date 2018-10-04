@@ -1,4 +1,4 @@
-from apps.core.api_utils import RecommendationSerializer
+from recsys_base.api_utils import RecommendationSerializer
 
 
 class ActivityRecommendationSerializer(RecommendationSerializer):
