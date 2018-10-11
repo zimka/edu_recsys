@@ -11,7 +11,7 @@ class NetworkingRecommendationUpdater(RecommendationUpdater):
     """
     def __init__(self, recommender_users_config=None, for_new_only=False):
         super().__init__( recommender_users_config or {
-            TripleNetworkingRecommender(items_space=Student.objects.all()): Student.objects.all()
+            TripleNetworkingRecommender(items_space=Student.objects.filter(is_staff=False)): Student.objects.all()
         })
         self.for_new_only = for_new_only
 
